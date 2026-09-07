@@ -48,40 +48,50 @@ func (mw *Manager) Logging(next http.Handler) http.Handler {
 	})
 }
 
-func (mw *Manager) RequireAuth(next http.Handler) http.Handler {
+func (mw *Manager) WithSession(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(api.SessionCookieName)
-		if err != nil {
+		if err == nil {
+			id, err := mw.cookieVerfier.VerifyCookie(r.Context(), cookie.Value)
+			if err == nil {
+				ctx := context.WithValue(r.Context(), userIDKey, id)
+				next.ServeHTTP(w, r.WithContext(ctx))
+				return
+			}
+
+			http.SetCookie(w, &http.Cookie{
+				Name:     api.SessionCookieName,
+				Value:    "",
+				Path:     "/",
+				MaxAge:   -1,
+				HttpOnly: api.SessionCookieHttpOnly,
+				Secure:   api.SessionCookieSecure,
+				SameSite: http.SameSiteLaxMode,
+			})
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (mw *Manager) RequireAuth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if _, ok := UserIDFromContext(r.Context()); !ok {
 			api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
 			return
 		}
 
-		id, err := mw.cookieVerfier.VerifyCookie(r.Context(), cookie.Value)
-		if err != nil {
-			slog.Error("failed to fetch user id from session", "error", err)
-			api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
-			return
-		}
-
-		ctx := context.WithValue(r.Context(), userIDKey, id)
-		next.ServeHTTP(w, r.WithContext(ctx))
+		next.ServeHTTP(w, r)
 	})
 }
 
 func (mw *Manager) RequireGuest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie(api.SessionCookieName)
-		if err != nil {
-			next.ServeHTTP(w, r)
+		if _, ok := UserIDFromContext(r.Context()); ok {
+			api.Error(w, api.NewApiError(errs.ErrForbidden))
 			return
 		}
 
-		_, err = mw.cookieVerfier.VerifyCookie(r.Context(), cookie.Value)
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-
-		api.Error(w, api.NewApiError(errs.ErrForbidden))
+		next.ServeHTTP(w, r)
 	})
 }
