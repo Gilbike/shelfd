@@ -52,3 +52,24 @@ func (r *Repository) Create(ctx context.Context, session *Session) error {
 
 	return nil
 }
+
+func (r *Repository) Delete(ctx context.Context, id string) error {
+	const query = `
+		DELETE FROM sessions
+		WHERE id = ?;
+	`
+
+	result, err := r.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete session: %w", err)
+	}
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+	if affected == 0 {
+		return errs.ErrNotFound
+	}
+
+	return nil
+}

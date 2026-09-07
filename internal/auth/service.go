@@ -20,6 +20,7 @@ type userRepository interface {
 type repository interface {
 	FindById(ctx context.Context, id string) (*Session, error)
 	Create(ctx context.Context, session *Session) error
+	Delete(ctx context.Context, id string) error
 }
 
 type passwordHasher interface {
@@ -126,4 +127,13 @@ func (s *Service) VerifyCookie(ctx context.Context, sessionId string) (int64, er
 	}
 
 	return session.UserId, nil
+}
+
+func (s *Service) RevokeSession(ctx context.Context, sessionId string) error {
+	err := s.repository.Delete(ctx, sessionId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
