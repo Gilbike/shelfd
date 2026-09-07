@@ -23,6 +23,6 @@ func (app *App) wire() (RouteMap, *middleware.Manager) {
 
 	return RouteMap{
 		"users": userHandler.RegisterRoutes(middlewares),
-		"auth":  authHandler.RegisterRoutes(),
+		"auth":  authHandler.RegisterRoutes(middlewares),
 	}, middlewares
 }
