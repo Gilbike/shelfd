@@ -52,15 +52,14 @@ func (h *Handler) HandleUserAuthenticate(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// TODO: remove magic values
 	cookie := &http.Cookie{
 		Name:     api.SessionCookieName,
 		Value:    session.ID,
 		Path:     "/",
-		MaxAge:   86400 * 30,
+		MaxAge:   api.SessionCookieMaxAge,
 		Expires:  session.ExpiresAt,
-		HttpOnly: true,
-		Secure:   true,
+		HttpOnly: api.SessionCookieHttpOnly,
+		Secure:   api.SessionCookieSecure,
 		SameSite: http.SameSiteLaxMode,
 	}
 
