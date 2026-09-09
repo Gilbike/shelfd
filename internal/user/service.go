@@ -19,6 +19,7 @@ var passwordNumberRegex = regexp.MustCompile(`[0-9]`)
 
 type repository interface {
 	Create(ctx context.Context, user *User, hash string) (int64, error)
+	FindById(ctx context.Context, id int64) (*User, error)
 }
 
 type passwordHasher interface {
@@ -73,6 +74,15 @@ func (s *Service) Create(ctx context.Context, payload userCreatePayload) (*User,
 	}
 
 	user.ID = userId
+
+	return user, nil
+}
+
+func (s *Service) GetByID(ctx context.Context, id int64) (*User, error) {
+	user, err := s.repository.FindById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
 
 	return user, nil
 }

@@ -5,11 +5,13 @@ import (
 	"net/http"
 
 	"github.com/Gilbike/shelfd/internal/core/api"
+	"github.com/Gilbike/shelfd/internal/core/errs"
 	"github.com/Gilbike/shelfd/internal/middleware"
 )
 
 type service interface {
 	Create(ctx context.Context, request userCreatePayload) (*User, error)
+	GetByID(ctx context.Context, id int64) (*User, error)
 }
 
 type Handler struct {
@@ -28,6 +30,7 @@ func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /", h.HandleUserCreate)
+	mux.Handle("GET /me", middlewares.WithSession(middlewares.RequireAuth(http.HandlerFunc(h.HandleUserCurrent))))
 
 	return mux
 }
@@ -50,4 +53,20 @@ func (h *Handler) HandleUserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	api.JSON(w, http.StatusCreated, user)
+}
+
+func (h *Handler) HandleUserCurrent(w http.ResponseWriter, r *http.Request) {
+	userId, ok := middleware.UserIDFromContext(r.Context())
+	if !ok {
+		api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
+		return
+	}
+
+	user, err := h.service.GetByID(r.Context(), userId)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+
+	api.JSON(w, http.StatusOK, user)
 }
