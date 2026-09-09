@@ -13,19 +13,12 @@ import (
 )
 
 type Argon2Hasher struct {
-	config    config.ArgonConfig
-	dummyHash string
+	config config.ArgonConfig
 }
 
 func NewArgon2Hasher(config config.ArgonConfig) *Argon2Hasher {
-	dummyHash, err := generateDummyHash(config)
-	if err != nil {
-		panic(fmt.Errorf("panic: failed to create dummy hash: %w", err))
-	}
-
 	return &Argon2Hasher{
-		config:    config,
-		dummyHash: dummyHash,
+		config: config,
 	}
 }
 
@@ -103,35 +96,4 @@ func generateSalt(saltSize uint32) ([]byte, error) {
 		return nil, fmt.Errorf("salt generation failed: %w", err)
 	}
 	return salt, nil
-}
-
-func generateDummyHash(cfg config.ArgonConfig) (string, error) {
-	salt, err := generateSalt(16)
-	if err != nil {
-		return "", fmt.Errorf("failed to generate salt: %w", err)
-	}
-
-	dummySecret := "timing-attack-preventing-dummy-hash-secret"
-	derivedKey := argon2.IDKey(
-		[]byte(dummySecret),
-		salt,
-		cfg.Time,
-		cfg.Memory,
-		cfg.Threads,
-		32,
-	)
-
-	// 3. Format as standard Argon2 string
-	b64Salt := base64.RawStdEncoding.EncodeToString(salt)
-	b64Hash := base64.RawStdEncoding.EncodeToString(derivedKey)
-
-	return fmt.Sprintf(
-		"$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
-		argon2.Version,
-		cfg.Memory,
-		cfg.Time,
-		cfg.Threads,
-		b64Salt,
-		b64Hash,
-	), nil
 }

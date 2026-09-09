@@ -12,6 +12,8 @@ import (
 	"github.com/Gilbike/shelfd/internal/user"
 )
 
+const dummyHash = "$argon2id$v=19$m=19456,t=3,p=2$DjLoubuz4MGTXJGYzMR/fA$ruJW/eyxS0ByHmga2mEbnLd8iY2JjXoIiImC4AOpS4k"
+
 type userRepository interface {
 	FindById(ctx context.Context, id int64) (*user.User, error)
 	FetchPasswordHashByUsername(ctx context.Context, username string) (string, int64, error)
@@ -44,13 +46,6 @@ type Service struct {
 }
 
 func NewService(repo repository, userRepo userRepository, hasher passwordHasher) *Service {
-	dummyPass, dummySalt, err := hasher.HashPassword("timing-attack-avoiding-dummy-password")
-	if err != nil {
-		panic(fmt.Errorf("failed to create dummy hash: %w", err))
-	}
-
-	dummyHash := hasher.EncodePassword(dummyPass, dummySalt)
-
 	return &Service{
 		repository: repo,
 		hasher:     hasher,
