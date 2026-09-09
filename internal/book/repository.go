@@ -3,8 +3,13 @@ package book
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/Gilbike/shelfd/internal/core/errs"
+	"modernc.org/sqlite"
+	sqlite3 "modernc.org/sqlite/lib"
 )
 
 const authorsSeparator = ";"
@@ -96,4 +101,30 @@ func (r *Repository) FetchAll(ctx context.Context, p pagination, s sorting) ([]B
 	}
 
 	return books, totalCount, nil
+}
+
+func (r *Repository) Create(ctx context.Context, book *Book) (int64, error) {
+	const query = `
+		INSERT INTO books (title, authors, pages, isbn, published_year, description)
+		VALUES (?, ?, ?, ?, ?, ?);
+	`
+
+	authors := strings.Join(book.Authors, authorsSeparator)
+	result, err := r.db.ExecContext(ctx, query, book.Title, authors, book.Pages, book.ISBN, book.PublishedYear, book.Description)
+	if err != nil {
+		var sqliteError *sqlite.Error
+		if errors.As(err, &sqliteError) {
+			if sqliteError.Code() == sqlite3.SQLITE_CONSTRAINT_UNIQUE {
+				return -1, errs.ErrAlreadyExists
+			}
+		}
+		return -1, fmt.Errorf("failed to insert book: %w", err)
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return -1, fmt.Errorf("failed to get last id: %w", err)
+	}
+
+	return id, nil
 }

@@ -2,12 +2,14 @@ package book
 
 import (
 	"context"
+	"time"
 )
 
 const pageSize = 20
 
 type repository interface {
 	FetchAll(ctx context.Context, p pagination, s sorting) ([]Book, int64, error)
+	Create(ctx context.Context, book *Book) (int64, error)
 }
 
 type listFilters struct {
@@ -20,6 +22,15 @@ type listResult struct {
 	TotalCount  int64
 	TotalPages  int
 	CurrentPage int
+}
+
+type createPayload struct {
+	title         string
+	authors       []string
+	pages         int
+	isbn          *string
+	publishedYear *int
+	description   *string
 }
 
 type Service struct {
@@ -44,4 +55,28 @@ func (s *Service) List(ctx context.Context, filters listFilters) (*listResult, e
 		CurrentPage: filters.page,
 		TotalPages:  (int(bookCount) + pageSize - 1) / pageSize,
 	}, nil
+}
+
+func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, error) {
+	book := &Book{
+		Title:         payload.title,
+		Authors:       payload.authors,
+		Pages:         payload.pages,
+		ISBN:          payload.isbn,
+		PublishedYear: payload.publishedYear,
+		Description:   payload.description,
+	}
+
+	insertId, err := s.repository.Create(ctx, book)
+	if err != nil {
+		return nil, err
+	}
+
+	book.ID = insertId
+
+	now := time.Now()
+	book.CreatedAt = now
+	book.UpdatedAt = now
+
+	return book, nil
 }
