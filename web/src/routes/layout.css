@@ -1,1 +1,44 @@
 @import 'tailwindcss';
+
+@font-face {
+	font-family: 'Rubik';
+	src: url('fonts/rubik.ttf');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@layer base {
+	:root {
+		--background: hsl(217, 0%, 96%);
+		--foreground: hsl(0, 0%, 4%);
+		--border: hsl(0, 0%, 80%);
+		--surface: hsl(0, 0%, 94%);
+	}
+
+	:root[data-theme='dark'] {
+		--background: hsl(0, 0%, 7%);
+		--foreground: hsl(217, 0%, 96%);
+		--border: hsl(0, 0%, 20%);
+		--surface: hsl(0, 0%, 12%);
+	}
+
+	@theme inline {
+		--color-background: var(--background);
+		--color-foreground: var(--foreground);
+		--color-border: var(--border);
+		--color-surface: var(--surface);
+
+		--font-rubik: "Rubik";
+	}
+
+	body {
+		@apply font-rubik;
+		@apply min-h-screen;
+		@apply bg-background text-foreground;
+	}
+
+	body > div {
+		@apply h-full;
+	}
+}
