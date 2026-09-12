@@ -1,32 +1,44 @@
 import * as en from './en.json';
 
 export type Locales = 'en';
-type Translation = Record<string, Record<string, string> | string>;
+
+type JsonTree = { [key: string]: string | JsonTree };
+
+type Leaves<T> = T extends object
+	? {
+			[
+				K in keyof T
+			]: `${Exclude<K, symbol>}${Leaves<T[K]> extends never ? '' : `.${Leaves<T[K]>}`}`;
+		}[keyof T]
+	: never;
+
+export type TranslationKey = Leaves<typeof en>;
 
 export const locale = $state<Locales>('en');
+const translations: Record<Locales, JsonTree> = { en };
 
-const translations: Record<Locales, Translation> = { en };
+function resolveKey(obj: unknown, path: string): string | undefined {
+	let current: unknown = obj;
+	for (const segment of path.split('.')) {
+		if (current == null || typeof current !== 'object') return undefined;
+		current = (current as Record<string, unknown>)[segment];
+	}
+	return typeof current === 'string' ? current : undefined;
+}
 
-function translate(locale: Locales, key: string) {
-	const levels = key.split('.');
+export function _(key: TranslationKey): string {
+	const language = translations[locale];
+	let text = resolveKey(language, key);
 
-	let currentLevel = translations[locale];
-	let text: string | null = null;
-	for (const level of levels) {
-		if (typeof currentLevel[level] === 'string') {
-			text = currentLevel[level];
-		} else {
-			currentLevel = currentLevel[level];
-		}
+	// fallback to english
+	if (!text && locale != 'en') {
+		text = resolveKey(language, key);
 	}
 
-	if (!text) throw new Error(`no translation found for ${locale}.${key}`);
+	if (!text) {
+		console.error(`missing key "${key}" for locale "${locale}"`);
+		return key;
+	}
 
 	return text;
 }
-
-const t = $derived((key: string) => {
-	return translate(locale, key);
-});
-
-export const _ = (key: string) => t(key);
