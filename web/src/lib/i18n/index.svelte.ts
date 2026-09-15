@@ -13,6 +13,7 @@ type Leaves<T> = T extends object
 	: never;
 
 export type TranslationKey = Leaves<typeof en>;
+export type ErrorKeys = `errors.${Leaves<typeof en.errors>}`;
 
 export const locale = $state<Locales>('en');
 const translations: Record<Locales, JsonTree> = { en };
