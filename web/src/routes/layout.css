@@ -14,6 +14,8 @@
 		--foreground: hsl(0, 0%, 4%);
 		--border: hsl(0, 0%, 80%);
 		--surface: hsl(0, 0%, 94%);
+
+		--primary: hsl(40, 52%, 52%);
 	}
 
 	:root[data-theme='dark'] {
@@ -28,8 +30,9 @@
 		--color-foreground: var(--foreground);
 		--color-border: var(--border);
 		--color-surface: var(--surface);
+		--color-primary: var(--primary);
 
-		--font-rubik: "Rubik";
+		--font-rubik: 'Rubik';
 	}
 
 	body {
@@ -41,4 +44,16 @@
 	body > div {
 		@apply h-full;
 	}
+}
+
+[data-button-root] {
+	@apply cursor-pointer;
+}
+
+.panel {
+	@apply rounded border border-border bg-surface p-4;
+}
+
+.interactive-primary {
+	@apply bg-primary/75 hover:bg-primary/90 active:bg-primary;
 }
