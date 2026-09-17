@@ -24,6 +24,8 @@ func New(cfg config.Config) (*App, error) {
 		config: cfg,
 	}
 
+	isDevelopment := app.config.Env == "development"
+
 	// setup logger
 	var logHandler slog.Handler
 	switch cfg.LogFormat {
@@ -38,7 +40,7 @@ func New(cfg config.Config) (*App, error) {
 		slog.SetDefault(logger)
 	}
 
-	if app.config.Env == "development" {
+	if isDevelopment {
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 
@@ -50,7 +52,8 @@ func New(cfg config.Config) (*App, error) {
 	app.db = db
 
 	// wire up
-	handler := newRouter(app.wire())
+	routes, middlewares := app.wire()
+	handler := newRouter(routes, middlewares, isDevelopment)
 
 	// setup http server
 	server := &http.Server{
