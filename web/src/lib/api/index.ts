@@ -1,14 +1,18 @@
 import type { ApiError } from './types';
 
 const apiRoutes = {
-	'user.auth': '/v1/auth/'
+	'user.auth': '/v1/hello/'
 };
 
-type Route = keyof typeof apiRoutes;
+export type Route = keyof typeof apiRoutes;
 
-export async function api<T>(route: Route): Promise<T | ApiError> {
-	const response = await fetch(`/api/${apiRoutes[route]}`, {
-		headers: { 'Content-Type': 'application/json' }
+export async function api<T>(route: Route, options: RequestInit = {}): Promise<T | ApiError> {
+	const response = await fetch(`/api${apiRoutes[route]}`, {
+		...options,
+		headers: {
+			'Content-Type': 'application/json',
+			...options.headers
+		}
 	});
 
 	const contentType = response.headers.get('content-type');
