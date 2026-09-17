@@ -1,7 +1,7 @@
 import type { ApiError } from './types';
 
 const apiRoutes = {
-	'user.auth': '/v1/hello/'
+	'user.auth': '/v1/hello'
 };
 
 export type Route = keyof typeof apiRoutes;
