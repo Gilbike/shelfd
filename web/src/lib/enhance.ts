@@ -1,6 +1,7 @@
 // src/lib/actions/enhance.ts
 import { api } from '$lib/api';
 import type { Route } from './api';
+import { isApiError } from './api/error';
 import type { ApiError } from './api/types';
 
 type EnhanceOptions = {
@@ -15,16 +16,18 @@ export function enhance(node: HTMLFormElement, options: EnhanceOptions) {
 		e.preventDefault();
 
 		const payload = serializeForm(node);
-		const method = (node.method || 'GET').toUpperCase();
 
 		options.onPending?.();
 
 		try {
 			const data = await api(options.route, {
-				method: method,
-				body: method === 'GET' ? undefined : JSON.stringify(payload)
+				body: JSON.stringify(payload)
 			});
-			options.onSuccess?.(data);
+			if (isApiError(data)) {
+				options.onError?.(data as ApiError);
+			} else {
+				options.onSuccess?.(data);
+			}
 		} catch (err) {
 			options.onError?.(err as ApiError);
 		}

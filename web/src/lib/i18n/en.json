@@ -9,6 +9,7 @@
 		"invalid_charset": "Invalid character",
 		"must_contain_lower": "Must contain a lower case letter",
 		"must_contain_upper": "Must contain a upper case letter",
-		"must_contain_number": "Must contain a number"
+		"must_contain_number": "Must contain a number",
+		"invalid_credentials": "Username or password is incorrect"
 	}
 }
