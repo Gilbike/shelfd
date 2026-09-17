@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { ERROR_CODES } from '$lib/api/error';
 	import type { ApiError } from '$lib/api/types';
 	import Button from '$lib/components/shared/Button.svelte';
@@ -13,11 +15,22 @@
 			isCredentialsOk = false;
 		}
 	}
+
+	function handleSuccess() {
+		goto(resolve('/(app)/books'));
+	}
 </script>
 
 <div class="panel w-11/12 sm:w-8/12 md:w-6/12 lg:w-1/4">
 	<h1 class="font-semibold">{_('auth.login')}</h1>
-	<form use:enhance={{ route: 'user.auth', onError: handleError }} class="flex flex-col gap-1">
+	<form
+		use:enhance={{
+			route: 'user.auth',
+			onError: handleError,
+			onSuccess: () => handleSuccess()
+		}}
+		class="flex flex-col gap-1"
+	>
 		<FormInput
 			id="username"
 			name="username"
