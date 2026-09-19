@@ -5,9 +5,10 @@ type RouteData = {
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE';
 };
 
-const apiRoutes: { [k: string]: RouteData } = {
-	'user.auth': { path: '/v1/auth', method: 'POST' }
-};
+const apiRoutes = {
+	'user.auth': { path: '/v1/auth', method: 'POST' },
+	'user.current': { path: '/v1/users/me', method: 'GET' }
+} as const satisfies Record<string, RouteData>;
 
 export type Route = keyof typeof apiRoutes;
 
