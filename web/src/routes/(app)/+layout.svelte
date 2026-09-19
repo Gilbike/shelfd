@@ -6,9 +6,7 @@
 </script>
 
 <nav class="flex flex-col justify-between border-r border-r-border bg-surface p-4">
-	<div>
-	<Button
-	</div>
+	<div></div>
 	<Button secondary class="p-2">
 		<User />
 	</Button>

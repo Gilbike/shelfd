@@ -16,7 +16,7 @@
 
 	const styles = $derived(
 		clsx(
-			'rounded border border-border bg-background px-2 py-1 outline-primary',
+			'rounded border border-border bg-surface px-2 py-1 outline-primary',
 			errors != undefined && errors.length > 0 && 'border-red-600'
 		)
 	);
