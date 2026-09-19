@@ -14,6 +14,7 @@
 		--foreground: hsl(0, 0%, 4%);
 		--border: hsl(0, 0%, 80%);
 		--surface: hsl(0, 0%, 95%);
+		--secondary: hsl(0, 0%, 89%);
 
 		--primary: hsl(40, 52%, 52%);
 	}
@@ -23,6 +24,7 @@
 		--foreground: hsl(217, 0%, 96%);
 		--border: hsl(0, 0%, 20%);
 		--surface: hsl(0, 0%, 12%);
+		--secondary: hsl(0, 0%, 16%);
 	}
 
 	@theme inline {
@@ -31,6 +33,7 @@
 		--color-border: var(--border);
 		--color-surface: var(--surface);
 		--color-primary: var(--primary);
+		--color-secondary: var(--secondary);
 
 		--font-rubik: 'Rubik';
 	}
@@ -56,4 +59,8 @@
 
 .interactive-primary {
 	@apply bg-primary/75 hover:bg-primary/90 active:bg-primary;
+}
+
+.interactive-secondary {
+	@apply bg-secondary/75 hover:bg-secondary/90 active:bg-secondary;
 }
