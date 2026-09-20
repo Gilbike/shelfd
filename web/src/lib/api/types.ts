@@ -16,3 +16,5 @@ export type User = {
 export type AuthResponse = {
 	user: User;
 };
+
+export type UserCurrentResponse = User;
