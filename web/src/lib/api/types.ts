@@ -13,8 +13,28 @@ export type User = {
 	updated_at: string;
 };
 
+export type Book = {
+	id: number;
+	title: string;
+	authors: string[];
+	pages: number;
+	isbn?: string;
+	cover_url?: string;
+	published_year?: number;
+	description?: string;
+	created_at: string;
+	updated_at: string;
+};
+
 export type AuthResponse = {
 	user: User;
 };
 
 export type UserCurrentResponse = User;
+
+export type BookListResponse = {
+	page: number;
+	total_pages: number;
+	total_books: number;
+	data: Book[];
+};
