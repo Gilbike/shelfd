@@ -21,7 +21,7 @@
 	}
 </script>
 
-<div class="panel w-11/12 sm:w-8/12 md:w-6/12 lg:w-1/4">
+<div class="panel mx-auto w-11/12 self-center sm:w-8/12 md:w-6/12 lg:w-1/4">
 	<h1 class="font-semibold">{_('auth.login')}</h1>
 	<form
 		use:enhance={{
@@ -48,9 +48,3 @@
 		<Button type="submit">{_('auth.login')}</Button>
 	</form>
 </div>
-
-<style lang="postcss">
-	:global(body) {
-		@apply flex items-center justify-center;
-	}
-</style>

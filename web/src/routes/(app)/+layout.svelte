@@ -8,11 +8,3 @@
 <main class="flex-1">
 	{@render children()}
 </main>
-
-<style lang="postcss">
-	@reference '../layout.css';
-
-	:global(body) {
-		@apply flex w-full flex-row;
-	}
-</style>
