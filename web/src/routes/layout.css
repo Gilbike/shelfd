@@ -53,6 +53,12 @@
 	@apply cursor-pointer;
 }
 
+[data-dropdown-menu-content] {
+	@apply p-2 bg-surface rounded;
+	@apply border border-border;
+	@apply shadow;
+}
+
 .panel {
 	@apply rounded border border-border bg-surface p-4;
 }
