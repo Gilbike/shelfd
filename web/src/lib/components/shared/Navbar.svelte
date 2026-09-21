@@ -42,7 +42,7 @@
 					<div {...wrapperProps}>
 						<div {...props} class="w-48" transition:fly={{ duration: 160, opacity: 0, x: -20 }}>
 							<DropdownMenu.Item class="mb-2 flex flex-row items-center gap-1">
-								<div class="flex h-8 w-8 items-center justify-center rounded-xl bg-primary">
+								<div class="flex size-8 items-center justify-center rounded-xl bg-primary">
 									{initial}
 								</div>
 								<div class="font-bold">{page.data.user.display_name}</div>

@@ -4,6 +4,7 @@
 		"logout": "Logout"
 	},
 	"books": {
+		"books": "Books",
 		"pages": "{{pages}} pages"
 	},
 	"errors": {
