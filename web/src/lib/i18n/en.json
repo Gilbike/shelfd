@@ -3,6 +3,9 @@
 		"login": "Login",
 		"logout": "Logout"
 	},
+	"books": {
+		"pages": "{{pages}} pages"
+	},
 	"errors": {
 		"required": "Field is required",
 		"min_length": "Must be at least characters",
