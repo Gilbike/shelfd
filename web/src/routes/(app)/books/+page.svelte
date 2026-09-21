@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import BookCard from '$lib/components/books/BookCard.svelte';
 	import Button from '$lib/components/shared/Button.svelte';
 	import { _ } from '$lib/i18n/index.svelte.js';
@@ -6,6 +8,14 @@
 	import { Pagination } from 'bits-ui';
 
 	const { data } = $props();
+
+	function handlePageChange(page: number) {
+		goto(resolve(`/(app)/books?page=${page}`), {
+			replaceState: true,
+			keepFocus: true,
+			noScroll: true
+		});
+	}
 </script>
 
 <div class="flex max-h-screen flex-1 flex-col overflow-hidden p-4">
@@ -25,7 +35,12 @@
 			<BookCard {...book} />
 		{/each}
 	</div>
-	<Pagination.Root class="mt-4 self-center" count={data.metadata.totalPages}>
+	<Pagination.Root
+		page={data.metadata.page}
+		class="mt-4 self-center"
+		count={data.metadata.totalPages}
+		onPageChange={handlePageChange}
+	>
 		{#snippet children({ pages })}
 			<div class="flex items-center">
 				<Pagination.PrevButton

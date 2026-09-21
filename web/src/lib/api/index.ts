@@ -14,10 +14,22 @@ const apiRoutes = {
 
 export type Route = keyof typeof apiRoutes;
 
-export async function api<T>(route: Route, options: RequestInit = {}): Promise<T | ApiError> {
+// TODO: make type safe
+export async function api<T>(
+	route: Route,
+	options: RequestInit = {},
+	params?: Record<string, unknown>
+): Promise<T | ApiError> {
 	const method = apiRoutes[route].method;
 
-	const response = await fetch(`/api${apiRoutes[route].path}`, {
+	const urlParams =
+		params === undefined
+			? ''
+			: `?${Object.entries(params)
+					.map((entry) => `${entry[0]}=${entry[1]}`)
+					.join('&')}`;
+
+	const response = await fetch(`/api${apiRoutes[route].path}${urlParams}`, {
 		...options,
 		method: method,
 		body: method === 'GET' ? undefined : options.body,
