@@ -8,9 +8,9 @@
 <div
 	class="basis-11/12 overflow-hidden rounded border border-border bg-surface sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
 >
-	<div class="p-10">
-		{#if cover_url === undefined}
-			<div class="flex aspect-1/1.5 w-full items-center justify-center bg-primary">
+	<div class="bg-secondary p-10">
+		{#if cover_url == null}
+			<div class="flex aspect-1/1.5 w-full items-center justify-center rounded bg-primary/60">
 				No cover image
 			</div>
 		{:else}
