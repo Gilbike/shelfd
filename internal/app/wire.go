@@ -16,7 +16,7 @@ func (app *App) wire() (RouteMap, *middleware.Manager) {
 	bookRepo := book.NewRepository(app.db)
 
 	userService := user.NewService(userRepo, argon2hasher)
-	authService := auth.NewService(authRepo, userRepo, argon2hasher)
+	authService := auth.NewService(authRepo, userRepo, argon2hasher, app.config.SessionLength)
 	bookService := book.NewService(bookRepo)
 
 	middlewares := middleware.New(authService)

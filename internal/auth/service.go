@@ -40,18 +40,20 @@ type authenticatePayload struct {
 }
 
 type Service struct {
-	repository repository
-	hasher     passwordHasher
-	userRepo   userRepository
-	dummyHash  string
+	repository    repository
+	hasher        passwordHasher
+	userRepo      userRepository
+	dummyHash     string
+	sessionLength int
 }
 
-func NewService(repo repository, userRepo userRepository, hasher passwordHasher) *Service {
+func NewService(repo repository, userRepo userRepository, hasher passwordHasher, sessionLength int) *Service {
 	return &Service{
-		repository: repo,
-		hasher:     hasher,
-		userRepo:   userRepo,
-		dummyHash:  dummyHash,
+		repository:    repo,
+		hasher:        hasher,
+		userRepo:      userRepo,
+		dummyHash:     dummyHash,
+		sessionLength: sessionLength,
 	}
 }
 
@@ -92,8 +94,7 @@ func (s *Service) Authenticate(ctx context.Context, payload authenticatePayload)
 
 	sessId := base64.RawURLEncoding.EncodeToString(sessIdBytes)
 
-	// TODO: move expiry time to config
-	expiresAt := time.Now().Add(30 * 24 * time.Hour).UTC()
+	expiresAt := time.Now().Add(time.Duration(s.sessionLength) * time.Minute).UTC()
 
 	session := &Session{
 		ID:        sessId,
