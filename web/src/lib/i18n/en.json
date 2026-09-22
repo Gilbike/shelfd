@@ -7,7 +7,15 @@
 		"add": "Add"
 	},
 	"books": {
+		"attributes": {
+			"title": "Title",
+			"authors": "Authors",
+			"pages": "Pages",
+			"isbn": "ISBN",
+			"published_year": "Year published"
+		},
 		"books": "Books",
+		"add_book": "Add book",
 		"pages": "{{pages}} pages"
 	},
 	"errors": {

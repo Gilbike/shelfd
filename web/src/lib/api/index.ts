@@ -9,7 +9,8 @@ const apiRoutes = {
 	'user.auth': { path: '/v1/auth', method: 'POST' },
 	'user.current': { path: '/v1/users/me', method: 'GET' },
 	'user.logout': { path: '/v1/auth/logout', method: 'POST' },
-	'books.list': { path: '/v1/books', method: 'GET' }
+	'books.list': { path: '/v1/books', method: 'GET' },
+	'books.create': { path: '/v1/books', method: 'POST' }
 } as const satisfies Record<string, RouteData>;
 
 export type Route = keyof typeof apiRoutes;
