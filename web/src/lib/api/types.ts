@@ -1,8 +1,15 @@
+import type { ErrorKeys } from '$lib/i18n/index.svelte';
+
 export type ApiError = {
 	status: number;
 	code: string;
 	message: string;
 	details?: Record<string, unknown>;
+};
+
+export type ApiValidationError = {
+	code: ErrorKeys;
+	params?: Record<string, unknown>;
 };
 
 export type User = {

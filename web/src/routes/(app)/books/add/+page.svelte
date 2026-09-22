@@ -1,14 +1,29 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { ERROR_CODES } from '$lib/api/error';
+	import type { ApiError, ApiValidationError } from '$lib/api/types';
 	import Button from '$lib/components/shared/Button.svelte';
 	import FormInput from '$lib/components/shared/FormInput.svelte';
 	import { enhance } from '$lib/enhance';
-	import { _ } from '$lib/i18n/index.svelte';
+	import { _, type ErrorKeys } from '$lib/i18n/index.svelte';
 	import { Plus, Trash } from '@lucide/svelte';
 	import { Label } from 'bits-ui';
 
 	let authors: string[] = $state([]);
+
+	let errors: Record<string, ErrorKeys[]> = $state({});
+
+	function handleError(error: ApiError) {
+		if (error.code === ERROR_CODES.INVALID_INPUT) {
+			errors = Object.fromEntries(
+				Object.entries(error.details!).map((err) => [
+					err[0],
+					(err[1] as ApiValidationError[]).map((e) => e.code)
+				])
+			);
+		}
+	}
 </script>
 
 <div class="p-4">
@@ -16,12 +31,12 @@
 	<form
 		use:enhance={{
 			route: 'books.create',
-			onError: (err) => console.log(err),
+			onError: handleError,
 			onSuccess: () => goto(resolve('/(app)/books'))
 		}}
 		class="flex flex-col gap-1"
 	>
-		<FormInput label={_('books.attributes.title')} name="title" />
+		<FormInput label={_('books.attributes.title')} name="title" errors={errors['title']} />
 		<div class="flex flex-col gap-1">
 			<p>{_('books.attributes.authors')} (min. 1 required)</p>
 			{#each authors as author, index (index)}
@@ -51,8 +66,20 @@
 			>
 				<Plus size={16} />{_('actions.add')}
 			</Button>
+			{#if errors['authors']}
+				<ul>
+					{#each errors['authors'] as error, index (index)}
+						<li class="text-sm leading-tight font-light text-red-600">{_(error)}</li>
+					{/each}
+				</ul>
+			{/if}
 		</div>
-		<FormInput label={_('books.attributes.pages')} type="number" name="pages" />
+		<FormInput
+			label={_('books.attributes.pages')}
+			type="number"
+			name="pages"
+			errors={errors['pages']}
+		/>
 		<FormInput label={_('books.attributes.isbn')} optional name="isbn" />
 		<FormInput
 			label={_('books.attributes.published_year')}

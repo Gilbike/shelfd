@@ -3,7 +3,8 @@ import type { ApiError } from './types';
 
 export const ERROR_CODES = {
 	INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
-	UNAUTHENTICATED: 'UNAUTHENTICATED'
+	UNAUTHENTICATED: 'UNAUTHENTICATED',
+	INVALID_INPUT: 'INVALID_INPUT'
 };
 
 export function isApiError(obj: unknown): obj is ApiError {

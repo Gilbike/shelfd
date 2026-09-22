@@ -1,6 +1,11 @@
 package book
 
-import "time"
+import (
+	"strings"
+	"time"
+
+	"github.com/Gilbike/shelfd/internal/core/errs"
+)
 
 type Book struct {
 	ID            int64     `json:"id"`
@@ -13,4 +18,25 @@ type Book struct {
 	Description   *string   `json:"description"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
+}
+
+func (b *Book) Validate() error {
+	errors := errs.NewValidationError()
+
+	title := strings.TrimSpace(b.Title)
+
+	if len(title) < 1 {
+		errors.AddWithParams("title", errs.CodeMinLen, map[string]any{"min": 1})
+	}
+
+	if len(b.Authors) < 1 {
+		errors.Add("authors", errs.CodeRequired)
+	}
+
+	if b.Pages < 1 {
+		// TODO: improve error code
+		errors.Add("pages", errs.CodeRequired)
+	}
+
+	return errors.ToError()
 }

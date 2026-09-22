@@ -69,6 +69,11 @@ func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, err
 		Description:   payload.description,
 	}
 
+	err := book.Validate()
+	if err != nil {
+		return nil, err
+	}
+
 	insertId, err := s.repository.Create(ctx, book)
 	if err != nil {
 		return nil, err
