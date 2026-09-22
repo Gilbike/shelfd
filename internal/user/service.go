@@ -51,13 +51,9 @@ func (s *Service) Create(ctx context.Context, payload userCreatePayload) (*User,
 		DisplayName: payload.DisplayName,
 	}
 
-	err := user.Validate()
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: merge validation errors
-	err = s.validatePassword(payload.Password)
+	userErr := user.Validate()
+	passErr := s.validatePassword(payload.Password)
+	err := errs.MergeValidationErrors(userErr, passErr)
 	if err != nil {
 		return nil, err
 	}

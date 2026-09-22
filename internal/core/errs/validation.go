@@ -1,7 +1,9 @@
 package errs
 
 import (
+	"errors"
 	"fmt"
+	"maps"
 	"strings"
 )
 
@@ -26,6 +28,32 @@ type ValidationError map[string][]FieldError
 
 func NewValidationError() ValidationError {
 	return make(ValidationError)
+}
+
+func MergeValidationErrors(to error, from error) error {
+	var toError ValidationError
+	var fromError ValidationError
+	isToError := errors.As(to, &toError)
+	isFromError := errors.As(from, &fromError)
+	if !isToError && isFromError {
+		return fromError
+	}
+	if isToError && !isToError {
+		return toError
+	}
+	if !isToError && !isFromError {
+		return fmt.Errorf("failed to merge errors, neither errors are ValidationError")
+	}
+
+	keys := maps.Keys(fromError)
+
+	for key := range keys {
+		for _, entry := range fromError[key] {
+			toError[key] = append(toError[key], entry)
+		}
+	}
+
+	return toError
 }
 
 func (ve ValidationError) Error() string {
