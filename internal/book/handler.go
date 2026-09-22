@@ -48,6 +48,7 @@ func (h *Handler) HandleBookList(w http.ResponseWriter, r *http.Request) {
 
 	api.JSON(w, http.StatusOK, listResponse{
 		CurrentPage: page,
+		PerPage:     result.PageSize,
 		TotalPages:  result.TotalPages,
 		TotalBooks:  result.TotalCount,
 		Data:        result.Books,

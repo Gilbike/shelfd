@@ -19,6 +19,7 @@ type listFilters struct {
 
 type listResult struct {
 	Books       []Book
+	PageSize    int
 	TotalCount  int64
 	TotalPages  int
 	CurrentPage int
@@ -51,6 +52,7 @@ func (s *Service) List(ctx context.Context, filters listFilters) (*listResult, e
 
 	return &listResult{
 		Books:       books,
+		PageSize:    pageSize,
 		TotalCount:  bookCount,
 		CurrentPage: filters.page,
 		TotalPages:  (int(bookCount) + pageSize - 1) / pageSize,

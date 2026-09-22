@@ -17,8 +17,8 @@
 		});
 	}
 
-	const firstIndex = $derived((data.metadata.page - 1) * 20 + 1);
-	const lastIndex = $derived(data.metadata.page * 20);
+	const firstIndex = $derived((data.metadata.page - 1) * data.metadata.perPage + 1);
+	const lastIndex = $derived(data.metadata.page * data.metadata.perPage);
 </script>
 
 <div class="flex h-dvh flex-col overflow-hidden p-4">

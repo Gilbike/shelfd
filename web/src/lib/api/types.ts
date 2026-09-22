@@ -34,6 +34,7 @@ export type UserCurrentResponse = User;
 
 export type BookListResponse = {
 	page: number;
+	per_page: number;
 	total_pages: number;
 	total_books: number;
 	data: Book[];
