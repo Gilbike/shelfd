@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import BookCard from '$lib/components/books/BookCard.svelte';
-	import Button from '$lib/components/shared/Button.svelte';
 	import { _ } from '$lib/i18n/index.svelte.js';
 	import { ChevronLeft, ChevronRight, Plus } from '@lucide/svelte';
 	import { Pagination } from 'bits-ui';
@@ -29,9 +28,13 @@
 				Showing {firstIndex} - {Math.min(lastIndex, data.metadata.totalBooks)}
 			</p>
 		</div>
-		<Button class="flex h-fit w-fit! flex-row items-center gap-1 px-2 py-1">
-			<Plus size={16} /> Add
-		</Button>
+		<a
+			href={resolve('/(app)/books/add')}
+			class="interactive-primary flex h-fit w-fit flex-row items-center gap-1 rounded px-2 py-1"
+		>
+			<Plus size={16} />
+			{_('actions.add')}
+		</a>
 	</div>
 	<div
 		class="grid min-h-0 flex-1 auto-rows-max grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"

@@ -3,6 +3,9 @@
 		"login": "Login",
 		"logout": "Logout"
 	},
+	"actions": {
+		"add": "Add"
+	},
 	"books": {
 		"books": "Books",
 		"pages": "{{pages}} pages"
