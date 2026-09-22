@@ -18,7 +18,7 @@
 	}
 </script>
 
-<div class="flex max-h-screen flex-1 flex-col overflow-hidden p-4">
+<div class="flex h-dvh flex-col overflow-hidden p-4">
 	<div class="mb-4 flex flex-row items-center justify-between">
 		<div>
 			<h1 class="text-2xl font-bold">{_('books.books')} ({data.metadata.totalBooks})</h1>
@@ -30,7 +30,9 @@
 			<Plus size={16} /> Add
 		</Button>
 	</div>
-	<div class="flex flex-row flex-wrap justify-evenly gap-2 overflow-auto">
+	<div
+		class="grid min-h-0 flex-1 auto-rows-max grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+	>
 		{#each data.books as book (book.id)}
 			<BookCard {...book} />
 		{/each}
