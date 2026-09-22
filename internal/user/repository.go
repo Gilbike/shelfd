@@ -50,7 +50,6 @@ func (r *Repository) Create(ctx context.Context, user *User, hash string) (int64
 	if err != nil {
 		var sqliteError *sqlite.Error
 		if errors.As(err, &sqliteError) {
-			// TODO: remove magic strings/numbers
 			if sqliteError.Code() == sqlite3.SQLITE_CONSTRAINT_UNIQUE {
 				return -1, errs.ErrAlreadyExists
 			}

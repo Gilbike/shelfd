@@ -13,6 +13,7 @@ import (
 )
 
 const dummyHash = "$argon2id$v=19$m=19456,t=3,p=2$DjLoubuz4MGTXJGYzMR/fA$ruJW/eyxS0ByHmga2mEbnLd8iY2JjXoIiImC4AOpS4k"
+const sessionIdSize = 16
 
 type userRepository interface {
 	FindById(ctx context.Context, id int64) (*user.User, error)
@@ -83,8 +84,7 @@ func (s *Service) Authenticate(ctx context.Context, payload authenticatePayload)
 		return nil, nil, err
 	}
 
-	// TODO: remove magic number
-	sessIdBytes := make([]byte, 16)
+	sessIdBytes := make([]byte, sessionIdSize)
 	_, err = rand.Read(sessIdBytes)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create session id: %w", err)
