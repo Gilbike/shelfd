@@ -16,6 +16,9 @@
 			noScroll: true
 		});
 	}
+
+	const firstIndex = $derived((data.metadata.page - 1) * 20 + 1);
+	const lastIndex = $derived(data.metadata.page * 20);
 </script>
 
 <div class="flex h-dvh flex-col overflow-hidden p-4">
@@ -23,7 +26,7 @@
 		<div>
 			<h1 class="text-2xl font-bold">{_('books.books')} ({data.metadata.totalBooks})</h1>
 			<p class="text-sm text-foreground/60">
-				Showing {(data.metadata.page - 1) * 20 + 1} - {data.metadata.page * 20}
+				Showing {firstIndex} - {Math.min(lastIndex, data.metadata.totalBooks)}
 			</p>
 		</div>
 		<Button class="flex h-fit w-fit! flex-row items-center gap-1 px-2 py-1">
