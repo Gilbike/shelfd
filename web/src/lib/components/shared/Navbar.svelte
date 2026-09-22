@@ -5,8 +5,8 @@
 	import { api } from '$lib/api';
 	import { isApiError } from '$lib/api/error';
 	import { _ } from '$lib/i18n/index.svelte';
-	import { LogOut, User } from '@lucide/svelte';
-	import { DropdownMenu } from 'bits-ui';
+	import { LibraryBig, LogOut, User } from '@lucide/svelte';
+	import { DropdownMenu, Tooltip } from 'bits-ui';
 	import { fly } from 'svelte/transition';
 	import Button from './Button.svelte';
 
@@ -29,7 +29,38 @@
 </script>
 
 <nav class="flex flex-col justify-between border-r border-r-border bg-surface p-4">
-	<div></div>
+	<div>
+		<Tooltip.Provider delayDuration={200} disableHoverableContent={true}>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<a
+						href={resolve('/(app)/books')}
+						class="interactive-secondary block cursor-pointer rounded p-2"
+					>
+						<LibraryBig />
+					</a>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="right" forceMount>
+					{#snippet child({ wrapperProps, props, open })}
+						{#if open}
+							<div {...wrapperProps}>
+								<div
+									{...props}
+									class="rounded bg-secondary shadow-lg"
+									transition:fly={{ x: -20, opacity: 0, duration: 160 }}
+								>
+									<Tooltip.Arrow class="text-secondary" />
+									<p class="p-2">
+										{_('books.books')}
+									</p>
+								</div>
+							</div>
+						{/if}
+					{/snippet}
+				</Tooltip.Content>
+			</Tooltip.Root>
+		</Tooltip.Provider>
+	</div>
 
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger class="interactive-secondary cursor-pointer rounded p-2">
