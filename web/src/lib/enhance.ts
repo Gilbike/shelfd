@@ -49,16 +49,29 @@ function serializeForm(form: HTMLFormElement): Record<string, unknown> {
 		const input = element as HTMLInputElement;
 		if (!input.name || input.disabled) continue;
 
-		// Típus szerinti konverzió
+		let value;
+
 		if (input.type === 'number' || input.type === 'range') {
-			data[input.name] = input.value === '' ? null : Number(input.value);
+			value = input.value === '' ? null : Number(input.value);
 		} else if (input.type === 'checkbox') {
-			data[input.name] = input.checked;
+			value = input.checked;
 		} else if (input.type === 'radio') {
-			if (input.checked) data[input.name] = input.value;
+			if (input.checked) value = input.value;
+		} else if (input.type === 'text' || input.type === 'password') {
+			if (input.value === '') value = null;
+			else value = input.value;
 		} else {
-			// Sima szöveg, email, dátum, select, textarea
-			data[input.name] = input.value;
+			value = input.value;
+		}
+
+		if (input.name.endsWith('[]')) {
+			const key = input.name.slice(0, -2);
+			if (!(key in data)) {
+				data[key] = [];
+			}
+			(data[key] as unknown[]).push(value);
+		} else {
+			data[input.name] = value;
 		}
 	}
 
