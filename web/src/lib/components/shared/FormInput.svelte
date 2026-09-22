@@ -8,11 +8,12 @@
 		label: string;
 		errors?: ErrorKeys[];
 		name: string;
+		optional?: boolean;
 	}
 
 	type Props = FormInputProps & HTMLInputAttributes;
 
-	let { label, errors, value = $bindable(), ...rest }: Props = $props();
+	let { label, errors, value = $bindable(), optional = false, ...rest }: Props = $props();
 
 	const styles = $derived(
 		clsx(
@@ -23,7 +24,12 @@
 </script>
 
 <div class="flex flex-col">
-	<Label.Root id={`${rest.name}-label`} for={rest.name}>{label}</Label.Root>
+	<Label.Root id={`${rest.name}-label`} for={rest.name}>
+		{label}
+		{#if !optional}
+			<sup class="text-xs text-red-600"> *</sup>
+		{/if}
+	</Label.Root>
 	<input aria-labelledby={`${rest.name}-label`} bind:value class={styles} {...rest} />
 	{#if errors}
 		<ul>
