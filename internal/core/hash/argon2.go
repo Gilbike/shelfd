@@ -23,14 +23,12 @@ func NewArgon2Hasher(config config.ArgonConfig) *Argon2Hasher {
 }
 
 func (hasher *Argon2Hasher) HashPassword(password string) ([]byte, []byte, error) {
-	// TODO: move salt size to config
-	salt, err := generateSalt(16)
+	salt, err := generateSalt(hasher.config.SaltSize)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	// TODO: move keylen to config
-	return argon2.IDKey([]byte(password), salt, hasher.config.Time, hasher.config.Memory, hasher.config.Threads, 32), salt, nil
+	return argon2.IDKey([]byte(password), salt, hasher.config.Time, hasher.config.Memory, hasher.config.Threads, hasher.config.KeyLen), salt, nil
 }
 
 func (hasher *Argon2Hasher) EncodePassword(hash []byte, salt []byte) string {

@@ -3,12 +3,14 @@ package config
 import "os"
 
 const (
-	EnvPort         = "SHELFD_PORT"
-	EnvEnv          = "SHELFD_ENV"
-	EnvLogFormat    = "SHELFD_LOG_FORMAT"
-	EnvArgonTime    = "SHELFD_ARGON_TIME"
-	EnvArgonMemory  = "SHELFD_ARGON_MEMORY"
-	EnvArgonThreads = "SHELFD_ARGON_THREADS"
+	EnvPort          = "SHELFD_PORT"
+	EnvEnv           = "SHELFD_ENV"
+	EnvLogFormat     = "SHELFD_LOG_FORMAT"
+	EnvArgonTime     = "SHELFD_ARGON_TIME"
+	EnvArgonMemory   = "SHELFD_ARGON_MEMORY"
+	EnvArgonThreads  = "SHELFD_ARGON_THREADS"
+	EnvArgonSaltSize = "SHELFD_ARGON_SALT_SIZE"
+	EnvArgonKeyLen   = "SHELFD_ARGON_KEY_LEN"
 )
 
 type Config struct {
