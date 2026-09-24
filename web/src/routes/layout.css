@@ -16,15 +16,15 @@
 		--surface: hsl(0, 0%, 95%);
 		--secondary: hsl(0, 0%, 89%);
 
-		--primary: hsl(40, 52%, 52%);
+		--primary: hsl(108, 11%, 59%);
 	}
 
-	:root[data-theme='dark'] {
+	body[data-theme='dark'] {
 		--background: hsl(0, 0%, 7%);
 		--foreground: hsl(217, 0%, 96%);
 		--border: hsl(0, 0%, 20%);
-		--surface: hsl(0, 0%, 12%);
-		--secondary: hsl(0, 0%, 16%);
+		--surface: hsl(0, 0%, 10%);
+		--secondary: hsl(0, 0%, 14%);
 	}
 
 	@theme inline {
@@ -65,9 +65,9 @@
 }
 
 .interactive-primary {
-	@apply bg-primary/75 hover:bg-primary/90 active:bg-primary;
+	@apply bg-primary/85 hover:bg-primary/95 active:bg-primary;
 }
 
 .interactive-secondary {
-	@apply bg-secondary/75 hover:bg-secondary/90 active:bg-secondary;
+	@apply bg-secondary/85 hover:bg-secondary/95 active:bg-secondary;
 }
