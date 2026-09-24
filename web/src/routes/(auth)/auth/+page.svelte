@@ -34,15 +34,19 @@
 		<FormInput
 			id="username"
 			name="username"
-			label="Username"
+			label={_("auth.username")}
 			type="text"
+			placeholder={_("auth.username")}
+			autocomplete="username"
 			errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
 		/>
 		<FormInput
 			id="password"
 			name="password"
-			label="Password"
+			label={_("auth.password")}
 			type="password"
+			placeholder={_("auth.password")}
+			autocomplete="current-password"
 			errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
 		/>
 		<Button type="submit">{_('auth.login')}</Button>

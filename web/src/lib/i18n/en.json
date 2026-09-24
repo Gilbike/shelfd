@@ -1,7 +1,9 @@
 {
 	"auth": {
 		"login": "Login",
-		"logout": "Logout"
+		"logout": "Logout",
+		"username": "Username",
+		"password": "Password"
 	},
 	"common": {
 		"optional": "optional"
