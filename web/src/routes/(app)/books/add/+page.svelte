@@ -36,7 +36,7 @@
 		}}
 		class="flex flex-col gap-1"
 	>
-		<FormInput label={_('books.attributes.title')} name="title" errors={errors['title']} />
+		<FormInput label={_('books.attributes.title')} name="title" required aria-required errors={errors['title']} />
 		<div class="flex flex-col gap-1">
 			<p>{_('books.attributes.authors')} (min. 1 required)</p>
 			{#each authors as author, index (index)}
@@ -46,6 +46,8 @@
 						type="text"
 						name="authors[]"
 						bind:value={authors[index]}
+						required
+						aria-required="true"
 						class="flex-1 rounded border border-border bg-surface px-2 py-1 outline-primary"
 					/>
 					<Button
@@ -78,6 +80,8 @@
 			label={_('books.attributes.pages')}
 			type="number"
 			name="pages"
+			required
+			min="1"
 			errors={errors['pages']}
 		/>
 		<FormInput label={_('books.attributes.isbn')} optional name="isbn" />

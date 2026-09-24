@@ -22,7 +22,7 @@
 </script>
 
 <div class="panel mx-auto w-11/12 self-center sm:w-8/12 md:w-6/12 lg:w-1/4">
-	<h1 class="font-semibold">{_('auth.login')}</h1>
+	<h1 class="font-semibold">{_('auth.signin')}</h1>
 	<form
 		use:enhance={{
 			route: 'user.auth',
@@ -38,6 +38,8 @@
 			type="text"
 			placeholder={_("auth.username")}
 			autocomplete="username"
+			required
+			aria-required
 			errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
 		/>
 		<FormInput
@@ -47,8 +49,10 @@
 			type="password"
 			placeholder={_("auth.password")}
 			autocomplete="current-password"
+			required
+			aria-required
 			errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
 		/>
-		<Button type="submit">{_('auth.login')}</Button>
+		<Button type="submit">{_('auth.signin')}</Button>
 	</form>
 </div>
