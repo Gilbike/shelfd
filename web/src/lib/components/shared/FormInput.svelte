@@ -26,8 +26,8 @@
 <div class="flex flex-col">
 	<Label.Root id={`${rest.name}-label`} for={rest.name}>
 		{label}
-		{#if !optional}
-			<sup class="text-xs text-red-600"> *</sup>
+		{#if optional}
+		<span>({_("common.optional")})</span>
 		{/if}
 	</Label.Root>
 	<input aria-labelledby={`${rest.name}-label`} bind:value class={styles} {...rest} />

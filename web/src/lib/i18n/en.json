@@ -3,6 +3,9 @@
 		"login": "Login",
 		"logout": "Logout"
 	},
+	"common": {
+		"optional": "optional"
+	},
 	"actions": {
 		"add": "Add"
 	},
