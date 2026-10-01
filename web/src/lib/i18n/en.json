@@ -1,9 +1,13 @@
 {
 	"auth": {
 		"signin": "Sign In",
+		"signup": "Sign Up",
 		"logout": "Logout",
 		"username": "Username",
-		"password": "Password"
+		"display_name": "Display Name",
+		"password": "Password",
+		"signup_cta": "Don't have an account?",
+		"signin_cta": "Already have an account?"
 	},
 	"common": {
 		"optional": "optional"

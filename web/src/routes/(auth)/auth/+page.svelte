@@ -1,58 +1,44 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import { ERROR_CODES } from '$lib/api/error';
-	import type { ApiError } from '$lib/api/types';
+	import AuthForm from '$lib/components/auth/AuthForm.svelte';
+	import SignupForm from '$lib/components/auth/SignupForm.svelte';
 	import Button from '$lib/components/shared/Button.svelte';
-	import FormInput from '$lib/components/shared/FormInput.svelte';
-	import { enhance } from '$lib/enhance';
-	import { _ } from '$lib/i18n/index.svelte';
+	import { _, type TranslationKey } from '$lib/i18n/index.svelte';
 
-	let isCredentialsOk = $state(true);
+	type FunctionState = {
+		ctaKey: TranslationKey;
+		buttonKey: TranslationKey;
+	};
 
-	function handleError(error: ApiError) {
-		if (error.code === ERROR_CODES.INVALID_CREDENTIALS) {
-			isCredentialsOk = false;
-		}
-	}
+	// $state because of https://svelte.dev/docs/svelte/runtime-warnings#Client-warnings-state_proxy_equality_mismatch
+	const authFunction: FunctionState = $state({
+		ctaKey: 'auth.signup_cta',
+		buttonKey: 'auth.signup'
+	});
 
-	function handleSuccess() {
-		goto(resolve('/(app)/books'));
+	// $state because of https://svelte.dev/docs/svelte/runtime-warnings#Client-warnings-state_proxy_equality_mismatch
+	const signupFunction: FunctionState = $state({
+		ctaKey: 'auth.signin_cta',
+		buttonKey: 'auth.signin'
+	});
+
+	let currentFunction = $state(authFunction);
+
+	let isAuthCurrent = $derived(currentFunction == authFunction);
+
+	function switchFunction() {
+		if (isAuthCurrent) currentFunction = signupFunction;
+		else currentFunction = authFunction;
 	}
 </script>
 
 <div class="panel mx-auto w-11/12 self-center sm:w-8/12 md:w-6/12 lg:w-1/4">
-	<h1 class="font-semibold">{_('auth.signin')}</h1>
-	<form
-		use:enhance={{
-			route: 'user.auth',
-			onError: handleError,
-			onSuccess: () => handleSuccess()
-		}}
-		class="flex flex-col gap-1"
-	>
-		<FormInput
-			id="username"
-			name="username"
-			label={_("auth.username")}
-			type="text"
-			placeholder={_("auth.username")}
-			autocomplete="username"
-			required
-			aria-required
-			errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
-		/>
-		<FormInput
-			id="password"
-			name="password"
-			label={_("auth.password")}
-			type="password"
-			placeholder={_("auth.password")}
-			autocomplete="current-password"
-			required
-			aria-required
-			errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
-		/>
-		<Button type="submit">{_('auth.signin')}</Button>
-	</form>
+	{#if isAuthCurrent}
+		<AuthForm />
+	{:else}
+		<SignupForm />
+	{/if}
+	<div class="mx-auto mt-4 flex w-fit flex-row items-center gap-1 text-sm text-foreground/60">
+		{_(currentFunction.ctaKey)}
+		<Button onclick={switchFunction} raw class="underline">{_(currentFunction.buttonKey)}</Button>
+	</div>
 </div>

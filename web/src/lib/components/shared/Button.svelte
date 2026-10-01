@@ -7,11 +7,12 @@
 	interface ButtonProps {
 		children: Snippet;
 		secondary?: boolean;
+		raw?: boolean;
 	}
 
 	type Props = ButtonProps & HTMLButtonAttributes;
 
-	const { children, secondary = false, ...rest }: Props = $props();
+	const { children, secondary = false, raw = false, ...rest }: Props = $props();
 
 	const styles = $derived(
 		clsx(
@@ -22,6 +23,6 @@
 	);
 </script>
 
-<BitsButton.Root {...rest} class={styles}>
+<BitsButton.Root {...rest} class={raw ? rest.class : styles}>
 	{@render children()}
 </BitsButton.Root>
