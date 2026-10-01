@@ -38,7 +38,7 @@ func MergeValidationErrors(to error, from error) error {
 	if !isToError && isFromError {
 		return fromError
 	}
-	if isToError && !isToError {
+	if isToError && !isFromError {
 		return toError
 	}
 	if !isToError && !isFromError {
