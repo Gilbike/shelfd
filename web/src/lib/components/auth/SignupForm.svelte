@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { ERROR_CODES } from '$lib/api/error';
+	import { api } from '$lib/api';
+	import { ERROR_CODES, isApiError } from '$lib/api/error';
 	import type { ApiError, ApiValidationError } from '$lib/api/types';
 	import { enhance } from '$lib/enhance';
 	import { _, type ErrorKeys } from '$lib/i18n/index.svelte';
 	import Button from '../shared/Button.svelte';
 	import FormInput from '../shared/FormInput.svelte';
+
+	let username = $state('');
+	let password = $state('');
 
 	let errors: Record<string, ErrorKeys[]> = $state({});
 
@@ -21,8 +25,13 @@
 		}
 	}
 
-	function handleSuccess() {
-		goto(resolve('/(auth)/auth'));
+	async function handleSuccess() {
+		const result = await api('user.auth', { body: JSON.stringify({ username, password }) });
+		if (isApiError(result)) {
+			// TODO: implement feedback
+			return;
+		}
+		goto(resolve('/(app)/books'));
 	}
 </script>
 
@@ -45,6 +54,7 @@
 		required
 		aria-required
 		errors={errors['username']}
+		bind:value={username}
 	/>
 	<FormInput
 		id="display_name"
@@ -66,6 +76,7 @@
 		required
 		aria-required
 		errors={errors['password']}
+		bind:value={password}
 	/>
 	<Button type="submit">{_('auth.signup')}</Button>
 </form>
