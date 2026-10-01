@@ -12,6 +12,7 @@ import (
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
 	Create(ctx context.Context, payload createPayload) (*Book, error)
+	Delete(ctx context.Context, id int64) error
 }
 
 type Handler struct {
@@ -29,6 +30,7 @@ func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
 
 	mux.HandleFunc("GET /", h.HandleBookList)
 	mux.HandleFunc("POST /", h.HandleBookCreate)
+	mux.HandleFunc("DELETE /", h.HandleBookDelete)
 
 	return middlewares.WithSession(middlewares.RequireAuth(mux))
 }
@@ -76,4 +78,20 @@ func (h *Handler) HandleBookCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	api.JSON(w, http.StatusCreated, book)
+}
+
+func (h *Handler) HandleBookDelete(w http.ResponseWriter, r *http.Request) {
+	request, err := api.FromBody[deleteRequest](r.Body)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+
+	err = h.service.Delete(r.Context(), request.Id)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+
+	api.JSON(w, http.StatusOK, map[string]any{"success": true})
 }

@@ -128,3 +128,23 @@ func (r *Repository) Create(ctx context.Context, book *Book) (int64, error) {
 
 	return id, nil
 }
+
+func (r *Repository) Delete(ctx context.Context, id int64) error {
+	const query = `DELETE FROM books WHERE id = ?;`
+
+	result, err := r.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete book: %w", err)
+	}
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to delete book: %w", err)
+	}
+
+	if affected == 0 {
+		return errs.ErrNotFound
+	}
+
+	return nil
+}

@@ -10,6 +10,7 @@ const pageSize = 20
 type repository interface {
 	FetchAll(ctx context.Context, p pagination, s sorting) ([]Book, int64, error)
 	Create(ctx context.Context, book *Book) (int64, error)
+	Delete(ctx context.Context, id int64) error
 }
 
 type listFilters struct {
@@ -86,4 +87,13 @@ func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, err
 	book.UpdatedAt = now
 
 	return book, nil
+}
+
+func (s *Service) Delete(ctx context.Context, id int64) error {
+	err := s.repository.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

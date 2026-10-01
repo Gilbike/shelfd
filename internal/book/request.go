@@ -8,3 +8,7 @@ type createRequest struct {
 	PublishedYear *int     `json:"published_year"`
 	Description   *string  `json:"description"`
 }
+
+type deleteRequest struct {
+	Id int64 `json:"id"`
+}
