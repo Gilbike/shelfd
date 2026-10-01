@@ -42,7 +42,7 @@ func MergeValidationErrors(to error, from error) error {
 		return toError
 	}
 	if !isToError && !isFromError {
-		return fmt.Errorf("failed to merge errors, neither errors are ValidationError")
+		return nil
 	}
 
 	keys := maps.Keys(fromError)
