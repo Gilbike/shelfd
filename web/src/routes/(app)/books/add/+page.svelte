@@ -91,7 +91,7 @@
 			type="number"
 			name="published_year"
 		/>
-		<Label.Root id="description_label" for="description">Description</Label.Root>
+		<Label.Root id="description_label" for="description">{_('books.attributes.description')}</Label.Root>
 		<textarea
 			name="description"
 			id="description"

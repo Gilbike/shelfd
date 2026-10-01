@@ -25,7 +25,10 @@
 		<div>
 			<h1 class="text-2xl font-bold">{_('books.books')} ({data.metadata.totalBooks})</h1>
 			<p class="text-sm text-foreground/60">
-				Showing {firstIndex} - {Math.min(lastIndex, data.metadata.totalBooks)}
+				{_('pagination.showing', {
+					from: firstIndex,
+					to: Math.min(lastIndex, data.metadata.totalBooks)
+				})}
 			</p>
 		</div>
 		<a

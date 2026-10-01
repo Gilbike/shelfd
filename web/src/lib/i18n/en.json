@@ -9,6 +9,7 @@
 		"signup_cta": "Don't have an account?",
 		"signin_cta": "Already have an account?"
 	},
+	"pagination": {"showing": "Showing {{from}} - {{to}}"},
 	"common": {
 		"optional": "optional"
 	},
@@ -21,11 +22,13 @@
 			"authors": "Authors",
 			"pages": "Pages",
 			"isbn": "ISBN",
-			"published_year": "Year published"
+			"published_year": "Year published",
+			"description": "Description"
 		},
 		"books": "Books",
 		"add_book": "Add book",
-		"pages": "{{pages}} pages"
+		"pages": "{{pages}} pages",
+		"no_cover": "No cover image"
 	},
 	"errors": {
 		"required": "Field is required",

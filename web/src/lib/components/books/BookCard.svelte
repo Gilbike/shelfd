@@ -11,7 +11,7 @@
 	<div class="bg-secondary p-10">
 		{#if cover_url == null}
 			<div class="flex aspect-1/1.5 w-full items-center justify-center rounded bg-primary/60">
-				No cover image
+				{_('books.no_cover')}
 			</div>
 		{:else}
 			<img alt={title} src={cover_url} class="aspect-1/1.5 w-full" />
