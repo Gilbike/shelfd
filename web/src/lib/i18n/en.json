@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"login": "Login",
+		"signin": "Sign In",
 		"logout": "Logout",
 		"username": "Username",
 		"password": "Password"
