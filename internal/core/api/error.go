@@ -71,6 +71,10 @@ func NewApiError(err error) *ApiError {
 		apiError.Status = http.StatusUnauthorized
 		apiError.Code = "INVALID_CREDENTIALS"
 		apiError.Message = "Invalid username or password"
+	case errors.Is(err, errs.ErrExpiredSession):
+		apiError.Status = http.StatusUnauthorized
+		apiError.Code = "SESSION_EXPIRED"
+		apiError.Message = "Session is expired and invalid"
 	default:
 		slog.Error("Failed to server request", "error", err)
 		apiError.Status = http.StatusInternalServerError
