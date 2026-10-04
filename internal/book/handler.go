@@ -12,6 +12,7 @@ import (
 
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
+	Get(ctx context.Context, id int64) (*Book, error)
 	Create(ctx context.Context, payload createPayload) (*Book, error)
 	Delete(ctx context.Context, id int64) error
 }
@@ -31,6 +32,7 @@ func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
 
 	mux.HandleFunc("GET /", h.HandleBookList)
 	mux.HandleFunc("POST /", h.HandleBookCreate)
+	mux.HandleFunc("GET /{id}", h.HandleBookGet)
 	mux.HandleFunc("DELETE /{id}", h.HandleBookDelete)
 
 	return middlewares.WithSession(middlewares.RequireAuth(mux))
@@ -56,6 +58,23 @@ func (h *Handler) HandleBookList(w http.ResponseWriter, r *http.Request) {
 		TotalBooks:  result.TotalCount,
 		Data:        result.Books,
 	})
+}
+
+func (h *Handler) HandleBookGet(w http.ResponseWriter, r *http.Request) {
+	idStr := r.PathValue("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil || id <= 0 {
+		api.Error(w, api.NewApiError(errs.ErrNotFound))
+		return
+	}
+
+	book, err := h.service.Get(r.Context(), id)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+
+	api.JSON(w, http.StatusOK, book)
 }
 
 func (h *Handler) HandleBookCreate(w http.ResponseWriter, r *http.Request) {

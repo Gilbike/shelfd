@@ -103,6 +103,29 @@ func (r *Repository) FetchAll(ctx context.Context, p pagination, s sorting) ([]B
 	return books, totalCount, nil
 }
 
+func (r *Repository) FindById(ctx context.Context, id int64) (*Book, error) {
+	const query = `
+		SELECT id, title, authors, pages, isbn, cover_url, published_year, description, created_at, updated_at
+		FROM books WHERE id = ?;
+	`
+
+	var book Book
+	var authorsRaw string
+
+	row := r.db.QueryRowContext(ctx, query, id)
+	err := row.Scan(&book.ID, &book.Title, &authorsRaw, &book.Pages, &book.ISBN, &book.CoverUrl, &book.PublishedYear, &book.Description, &book.CreatedAt, &book.UpdatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errs.ErrNotFound
+		}
+		return nil, fmt.Errorf("failed to read book from database: %w", err)
+	}
+
+	book.Authors = strings.Split(authorsRaw, ";")
+
+	return &book, nil
+}
+
 func (r *Repository) Create(ctx context.Context, book *Book) (int64, error) {
 	const query = `
 		INSERT INTO books (title, authors, pages, isbn, published_year, description)

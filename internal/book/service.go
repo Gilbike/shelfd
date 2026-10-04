@@ -9,6 +9,7 @@ const pageSize = 20
 
 type repository interface {
 	FetchAll(ctx context.Context, p pagination, s sorting) ([]Book, int64, error)
+	FindById(ctx context.Context, id int64) (*Book, error)
 	Create(ctx context.Context, book *Book) (int64, error)
 	Delete(ctx context.Context, id int64) error
 }
@@ -58,6 +59,10 @@ func (s *Service) List(ctx context.Context, filters listFilters) (*listResult, e
 		CurrentPage: filters.page,
 		TotalPages:  (int(bookCount) + pageSize - 1) / pageSize,
 	}, nil
+}
+
+func (s *Service) Get(ctx context.Context, id int64) (*Book, error) {
+	return s.repository.FindById(ctx, id)
 }
 
 func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, error) {
