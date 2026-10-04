@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Gilbike/shelfd/internal/core/api"
+	"github.com/Gilbike/shelfd/internal/core/errs"
 	"github.com/Gilbike/shelfd/internal/middleware"
 )
 
@@ -30,7 +31,7 @@ func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
 
 	mux.HandleFunc("GET /", h.HandleBookList)
 	mux.HandleFunc("POST /", h.HandleBookCreate)
-	mux.HandleFunc("DELETE /", h.HandleBookDelete)
+	mux.HandleFunc("DELETE /{id}", h.HandleBookDelete)
 
 	return middlewares.WithSession(middlewares.RequireAuth(mux))
 }
@@ -81,13 +82,14 @@ func (h *Handler) HandleBookCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) HandleBookDelete(w http.ResponseWriter, r *http.Request) {
-	request, err := api.FromBody[deleteRequest](r.Body)
-	if err != nil {
-		api.Error(w, api.NewApiError(err))
+	idStr := r.PathValue("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil || id <= 0 {
+		api.Error(w, api.NewApiError(errs.ErrNotFound))
 		return
 	}
 
-	err = h.service.Delete(r.Context(), request.Id)
+	err = h.service.Delete(r.Context(), id)
 	if err != nil {
 		api.Error(w, api.NewApiError(err))
 		return
