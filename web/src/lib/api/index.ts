@@ -16,13 +16,22 @@ const apiRoutes = {
 
 export type Route = keyof typeof apiRoutes;
 
+export function apiRoute(route: Route, params: Record<string, unknown> = {}): RouteData {
+	return {
+		path: (apiRoutes[route].path as string).replace(/{([a-zA-Z0-9_-]+)}/g, (_, key) =>
+			key in params ? String(params[key]) : 'undefined'
+		),
+		method: apiRoutes[route].method
+	};
+}
+
 // TODO: make type safe
 export async function api<T>(
-	route: Route,
+	route: RouteData,
 	options: RequestInit = {},
 	params?: Record<string, unknown>
 ): Promise<T | ApiError> {
-	const method = apiRoutes[route].method;
+	const method = route.method;
 
 	const urlParams =
 		params === undefined
@@ -31,7 +40,7 @@ export async function api<T>(
 					.map((entry) => `${entry[0]}=${entry[1]}`)
 					.join('&')}`;
 
-	const response = await fetch(`/api${apiRoutes[route].path}${urlParams}`, {
+	const response = await fetch(`/api${route.path}${urlParams}`, {
 		...options,
 		method: method,
 		body: method === 'GET' ? undefined : options.body,

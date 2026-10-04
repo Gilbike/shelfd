@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { api } from '$lib/api';
+	import { api, apiRoute } from '$lib/api';
 	import { isApiError } from '$lib/api/error';
 	import { _ } from '$lib/i18n/index.svelte';
 	import { LibraryBig, LogOut, User } from '@lucide/svelte';
@@ -19,7 +19,7 @@
 	);
 
 	async function handleLogout() {
-		const result = await api('user.logout');
+		const result = await api(apiRoute('user.logout'));
 		if (isApiError(result)) {
 			console.error(`Failed to logout: ${result.code}`);
 			return;

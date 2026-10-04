@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { api } from '$lib/api';
+	import { api, apiRoute } from '$lib/api';
 	import { ERROR_CODES, isApiError } from '$lib/api/error';
 	import type { ApiError, ApiValidationError } from '$lib/api/types';
 	import { enhance } from '$lib/enhance';
@@ -26,7 +26,9 @@
 	}
 
 	async function handleSuccess() {
-		const result = await api('user.auth', { body: JSON.stringify({ username, password }) });
+		const result = await api(apiRoute('user.auth'), {
+			body: JSON.stringify({ username, password })
+		});
 		if (isApiError(result)) {
 			// TODO: implement feedback
 			return;
