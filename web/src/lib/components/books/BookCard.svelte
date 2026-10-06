@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { Book } from '$lib/api/types';
 	import { _ } from '$lib/i18n/index.svelte';
 
-	const { title, authors, pages, cover_url }: Book = $props();
+	const { id, title, authors, pages, cover_url }: Book = $props();
 </script>
 
-<div
+<a
+	href={resolve('/(app)/books/[bid]', { bid: id.toString() })}
 	class="basis-11/12 overflow-hidden rounded border border-border bg-surface sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
 >
 	<div class="bg-secondary p-10">
@@ -22,4 +24,4 @@
 		<p class="text-sm text-foreground/60">{authors.join(', ')}</p>
 		<p>{_('books.pages', { pages })}</p>
 	</div>
-</div>
+</a>
