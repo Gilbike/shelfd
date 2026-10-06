@@ -1,14 +1,28 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+	import { api, apiRoute } from '$lib/api';
+	import { isApiError } from '$lib/api/error';
+	import Button from '$lib/components/shared/Button.svelte';
 	import { _ } from '$lib/i18n/index.svelte';
-	import { EllipsisVertical } from '@lucide/svelte';
+	import { EllipsisVertical, Trash } from '@lucide/svelte';
 	import { DropdownMenu } from 'bits-ui';
 	import { fly } from 'svelte/transition';
 	import type { LayoutProps } from './$types';
 
 	const { data }: LayoutProps = $props();
-	const { title, cover_url, pages, authors, description, isbn, published_year } = $derived(
+	const { id, title, cover_url, pages, authors, description, isbn, published_year } = $derived(
 		data.book
 	);
+
+	async function handleDeleteClick() {
+		const result = await api(apiRoute('books.delete', { id }));
+		if (isApiError(result)) {
+			// TODO: implement feedback
+			return;
+		}
+		goto(resolve('/(app)/books'));
+	}
 </script>
 
 <div class="flex gap-4 p-4 not-md:flex-col">
@@ -25,7 +39,7 @@
 			class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto sm:max-w-1/2 sm:min-w-1/2 md:max-w-1/3 md:min-w-1/3 lg:max-w-1/4 lg:min-w-1/4 xl:max-w-1/5"
 		/>
 	{/if}
-	<div>
+	<div class="flex-1">
 		<div class="flex flex-row items-center justify-between">
 			<div>
 				<h1 class="text-2xl font-bold">{title}</h1>
@@ -41,7 +55,14 @@
 						{#if open}
 							<div {...wrapperProps}>
 								<div {...props} class="w-48" transition:fly={{ duration: 160, opacity: 0, x: 20 }}>
-									!!Book actions!!
+									<DropdownMenu.Item onSelect={handleDeleteClick}>
+										{#snippet child({ props })}
+											<Button {...props} secondary class="flex flex-row items-center gap-1 px-2">
+												<Trash size={16} />
+												{_('actions.delete')}
+											</Button>
+										{/snippet}
+									</DropdownMenu.Item>
 								</div>
 							</div>
 						{/if}

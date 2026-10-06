@@ -14,7 +14,8 @@
 		"optional": "optional"
 	},
 	"actions": {
-		"add": "Add"
+		"add": "Add",
+		"delete": "Delete"
 	},
 	"books": {
 		"attributes": {

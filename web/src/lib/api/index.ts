@@ -12,7 +12,8 @@ const apiRoutes = {
 	'user.logout': { path: '/v1/auth/logout', method: 'POST' },
 	'books.list': { path: '/v1/books', method: 'GET' },
 	'books.create': { path: '/v1/books', method: 'POST' },
-	'books.get': { path: '/v1/books/{id}', method: 'GET' }
+	'books.get': { path: '/v1/books/{id}', method: 'GET' },
+	'books.delete': { path: '/v1/books/{id}', method: 'DELETE' }
 } as const satisfies Record<string, RouteData>;
 
 export type Route = keyof typeof apiRoutes;
