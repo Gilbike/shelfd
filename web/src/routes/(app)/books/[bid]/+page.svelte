@@ -14,7 +14,7 @@
 <div class="flex gap-4 p-4 not-md:flex-col">
 	{#if cover_url == null}
 		<div
-			class="flex aspect-1/1.5 w-full items-center justify-center rounded bg-primary/60 not-md:mx-auto sm:min-w-1/2 md:min-w-1/3 lg:min-w-1/4 xl:min-w-1/5"
+			class="flex aspect-1/1.5 w-full items-center justify-center rounded bg-primary/60 not-md:mx-auto sm:max-w-1/2 sm:min-w-1/2 md:max-w-1/3 md:min-w-1/3 lg:max-w-1/4 lg:min-w-1/4 xl:max-w-1/5"
 		>
 			{_('books.no_cover')}
 		</div>
@@ -22,7 +22,7 @@
 		<img
 			alt={title}
 			src={cover_url}
-			class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto sm:min-w-1/2 md:min-w-1/3 lg:min-w-1/4 xl:min-w-1/5"
+			class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto sm:max-w-1/2 sm:min-w-1/2 md:max-w-1/3 md:min-w-1/3 lg:max-w-1/4 lg:min-w-1/4 xl:max-w-1/5"
 		/>
 	{/if}
 	<div>
