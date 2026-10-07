@@ -1,6 +1,7 @@
 package asset
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -27,7 +28,7 @@ func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
 func (h *Handler) HandleAssetGet(w http.ResponseWriter, r *http.Request) {
 	filename := r.PathValue("name")
 
-	content, err := os.ReadFile(filename)
+	content, err := os.ReadFile(fmt.Sprintf("data/%s", filename))
 	if err != nil {
 		api.Error(w, api.NewApiError(errs.ErrNotFound))
 		return

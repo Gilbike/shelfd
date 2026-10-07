@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"io/fs"
 	"log/slog"
 	"net/http"
 	"os"
@@ -25,6 +26,14 @@ func New(cfg config.Config) (*App, error) {
 	}
 
 	isDevelopment := app.config.Env == "development"
+
+	_, err := os.Stat("data/")
+	if errors.Is(err, fs.ErrNotExist) {
+		err = os.MkdirAll("data/", 0700)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	// setup logger
 	var logHandler slog.Handler

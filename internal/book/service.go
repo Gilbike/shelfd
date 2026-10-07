@@ -116,7 +116,7 @@ func (s *Service) UploadCover(ctx context.Context, id int64, mimeType string, co
 	fileName := fmt.Sprintf("b%d.%s", id, fileExtension)
 
 	// TODO: move to data folder with db
-	err := os.WriteFile(fileName, content, 0644)
+	err := os.WriteFile(fmt.Sprintf("data/%s", fileName), content, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write cover file: %w", err)
 	}

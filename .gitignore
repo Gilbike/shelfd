@@ -30,6 +30,9 @@ go.work.sum
 # .idea/
 # .vscode/
 
+# persistent data created by the application (database and uploaded assets)
+data/
+
 # Local SQLite database
 *.db
 *.db-journal

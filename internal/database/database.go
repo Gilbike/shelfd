@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const dbFileName = "app.db"
+const dbFileName = "data/app.db"
 
 var dbConnectParams = []string{
 	"_pragma=journal_mode(WAL)",
