@@ -18,6 +18,16 @@ var sortByAllowList = map[string]bool{
 	"title": true,
 }
 
+var updateFieldAllowList = map[string]bool{
+	"title":          true,
+	"authors":        true,
+	"pages":          true,
+	"isbn":           true,
+	"cover_url":      true,
+	"published_year": true,
+	"description":    true,
+}
+
 type pagination struct {
 	page     int
 	pageSize int
@@ -152,6 +162,31 @@ func (r *Repository) Create(ctx context.Context, book *Book) (int64, error) {
 	return id, nil
 }
 
+func (r *Repository) Update(ctx context.Context, id int64, dirtyValues map[string]any) error {
+	fields, values, err := r.sanitizeFields(dirtyValues)
+	if err != nil {
+		return err
+	}
+	values = append(values, id)
+
+	query := fmt.Sprintf("UPDATE books SET %s WHERE id = ?", fields)
+	result, err := r.db.ExecContext(ctx, query, values...)
+	if err != nil {
+		return fmt.Errorf("failed to update book %d: %w", id, err)
+	}
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to delete book: %w", err)
+	}
+
+	if affected == 0 {
+		return errs.ErrNotFound
+	}
+
+	return nil
+}
+
 func (r *Repository) Delete(ctx context.Context, id int64) error {
 	const query = `DELETE FROM books WHERE id = ?;`
 
@@ -170,4 +205,24 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 	}
 
 	return nil
+}
+
+// TODO: get slices and remove hardcoded capacity (derived from: updateFieldAllowList)
+func (r *Repository) sanitizeFields(fields map[string]any) (string, []any, error) {
+	keys := make([]string, 0, len(fields))
+	values := make([]any, 0, len(fields)+1)
+
+	for field, val := range fields {
+		if !updateFieldAllowList[field] {
+			continue
+		}
+		keys = append(keys, fmt.Sprintf("%s = ?", field))
+		values = append(values, val)
+	}
+
+	if len(keys) == 0 {
+		return "", nil, errors.New("no valid fields")
+	}
+
+	return strings.Join(keys, ", "), values, nil
 }

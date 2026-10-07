@@ -2,6 +2,9 @@ package book
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -12,6 +15,7 @@ type repository interface {
 	FindById(ctx context.Context, id int64) (*Book, error)
 	Create(ctx context.Context, book *Book) (int64, error)
 	Delete(ctx context.Context, id int64) error
+	Update(ctx context.Context, id int64, dirtyFields map[string]any) error
 }
 
 type listFilters struct {
@@ -92,6 +96,40 @@ func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, err
 	book.UpdatedAt = now
 
 	return book, nil
+}
+
+func (s *Service) UploadCover(ctx context.Context, id int64, mimeType string, content []byte, urlTemplate string) error {
+	parts := strings.Split(mimeType, "/")
+	if len(parts) < 2 {
+		return fmt.Errorf("invalid file format")
+	}
+
+	var fileExtension string
+	// svg mime type is svg+xml
+	// https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types#common_image_file_types
+	if strings.Contains(parts[1], "+") {
+		fileExtension = "svg"
+	} else {
+		fileExtension = parts[1]
+	}
+
+	fileName := fmt.Sprintf("b%d.%s", id, fileExtension)
+
+	// TODO: move to data folder with db
+	err := os.WriteFile(fileName, content, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write cover file: %w", err)
+	}
+
+	url := fmt.Sprintf(urlTemplate, fileName)
+
+	// TODO: change to more typesafe implementation
+	err = s.repository.Update(ctx, id, map[string]any{"cover_url": url})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *Service) Delete(ctx context.Context, id int64) error {

@@ -10,11 +10,15 @@ import (
 	"github.com/Gilbike/shelfd/internal/middleware"
 )
 
+// TODO: move to config
+const maxFileSize = 2 << 20 //2 MB
+
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
 	Get(ctx context.Context, id int64) (*Book, error)
 	Create(ctx context.Context, payload createPayload) (*Book, error)
 	Delete(ctx context.Context, id int64) error
+	UploadCover(ctx context.Context, id int64, mimeType string, content []byte, urlTemplate string) error
 }
 
 type Handler struct {
@@ -33,6 +37,7 @@ func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
 	mux.HandleFunc("GET /", h.HandleBookList)
 	mux.HandleFunc("POST /", h.HandleBookCreate)
 	mux.HandleFunc("GET /{id}", h.HandleBookGet)
+	mux.HandleFunc("PUT /{id}/cover", h.HandleBookCoverUpload)
 	mux.HandleFunc("DELETE /{id}", h.HandleBookDelete)
 
 	return middlewares.WithSession(middlewares.RequireAuth(mux))
@@ -98,6 +103,40 @@ func (h *Handler) HandleBookCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	api.JSON(w, http.StatusCreated, book)
+}
+
+func (h *Handler) HandleBookCoverUpload(w http.ResponseWriter, r *http.Request) {
+	idStr := r.PathValue("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil || id <= 0 {
+		api.Error(w, api.NewApiError(errs.ErrNotFound))
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
+	file, header, err := r.FormFile("cover")
+	if err != nil {
+		api.Error(w, api.NewApiError(api.ErrBadRequest))
+		return
+	}
+
+	mimeType := header.Header.Get("Content-Type")
+	if mimeType == "" {
+		// TODO: make error better
+		api.Error(w, api.NewApiError(api.ErrInternalServer))
+		return
+	}
+
+	var content = make([]byte, header.Size)
+	_, err = file.Read(content)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+	defer file.Close()
+
+	h.service.UploadCover(r.Context(), id, mimeType, content, "/api/v1/assets/%s")
+	api.JSON(w, http.StatusCreated, map[string]any{"success": true})
 }
 
 func (h *Handler) HandleBookDelete(w http.ResponseWriter, r *http.Request) {
