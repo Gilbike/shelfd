@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/Gilbike/shelfd/internal/asset"
 	"github.com/Gilbike/shelfd/internal/auth"
 	"github.com/Gilbike/shelfd/internal/book"
 	"github.com/Gilbike/shelfd/internal/core/hash"
@@ -25,9 +26,12 @@ func (app *App) wire() (RouteMap, *middleware.Manager) {
 	authHandler := auth.NewHandler(authService)
 	bookHandler := book.NewHandler(bookService)
 
+	assetHandler := asset.NewHandler()
+
 	return RouteMap{
-		"users": userHandler.RegisterRoutes(middlewares),
-		"auth":  authHandler.RegisterRoutes(middlewares),
-		"books": bookHandler.RegisterRoutes(middlewares),
+		"users":  userHandler.RegisterRoutes(middlewares),
+		"auth":   authHandler.RegisterRoutes(middlewares),
+		"books":  bookHandler.RegisterRoutes(middlewares),
+		"assets": assetHandler.RegisterRoutes(middlewares),
 	}, middlewares
 }
