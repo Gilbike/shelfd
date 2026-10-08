@@ -16,7 +16,7 @@
 				{_('books.no_cover')}
 			</div>
 		{:else}
-			<img alt={title} src={cover_url} class="aspect-1/1.5 w-full rounded" />
+			<img alt={title} src={cover_url} class="aspect-1/1.5 w-full rounded border border-border" />
 		{/if}
 	</div>
 	<div class="border-t border-border p-2">
