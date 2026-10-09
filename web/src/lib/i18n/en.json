@@ -29,7 +29,8 @@
 		"books": "Books",
 		"add_book": "Add book",
 		"pages": "{{pages}} pages",
-		"no_cover": "No cover image"
+		"no_cover": "No cover image",
+		"upload_cover": "Click to upload cover"
 	},
 	"errors": {
 		"required": "Field is required",

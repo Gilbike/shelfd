@@ -13,7 +13,8 @@ const apiRoutes = {
 	'books.list': { path: '/v1/books', method: 'GET' },
 	'books.create': { path: '/v1/books', method: 'POST' },
 	'books.get': { path: '/v1/books/{id}', method: 'GET' },
-	'books.delete': { path: '/v1/books/{id}', method: 'DELETE' }
+	'books.delete': { path: '/v1/books/{id}', method: 'DELETE' },
+	'books.cover.update': { path: '/v1/books/{id}/cover', method: 'PUT' }
 } as const satisfies Record<string, RouteData>;
 
 export type Route = keyof typeof apiRoutes;
@@ -42,14 +43,17 @@ export async function api<T>(
 					.map((entry) => `${entry[0]}=${entry[1]}`)
 					.join('&')}`;
 
+	const headers = new Headers(options.headers);
+
+	if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
+		headers.set('Content-Type', 'application/json');
+	}
+
 	const response = await fetch(`/api${route.path}${urlParams}`, {
 		...options,
 		method: method,
 		body: method === 'GET' ? undefined : options.body,
-		headers: {
-			'Content-Type': 'application/json',
-			...options.headers
-		}
+		headers
 	});
 
 	// not the best one
