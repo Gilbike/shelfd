@@ -8,18 +8,22 @@
 
 <a
 	href={resolve('/(app)/books/[bid]', { bid: id.toString() })}
-	class="basis-11/12 overflow-hidden rounded border border-border bg-surface sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+	class="flex basis-11/12 flex-col overflow-hidden rounded border border-border bg-surface sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
 >
-	<div class="bg-secondary p-10">
-		{#if cover_url == null}
-			<div class="flex aspect-1/1.5 w-full items-center justify-center rounded bg-primary/60">
-				{_('books.no_cover')}
-			</div>
-		{:else}
-			<img alt={title} src={cover_url} class="aspect-1/1.5 w-full rounded border border-border" />
-		{/if}
+	<div class="flex-1 bg-secondary p-10">
+		<div class="flex aspect-1/1.5 w-full items-center justify-center">
+			{#if cover_url == null}
+				<div
+					class="flex h-full w-full items-center justify-center rounded border border-dashed border-primary text-sm font-light text-foreground/60"
+				>
+					{_('books.no_cover')}
+				</div>
+			{:else}
+				<img alt={title} src={cover_url} class=" w-full rounded border border-border" />
+			{/if}
+		</div>
 	</div>
-	<div class="border-t border-border p-2">
+	<div class="h-fit border-t border-border p-2">
 		<p>{title}</p>
 		<p class="text-sm text-foreground/60">{authors.join(', ')}</p>
 		<p>{_('books.pages', { pages })}</p>
