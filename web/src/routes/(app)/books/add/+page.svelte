@@ -130,7 +130,7 @@
 					<img
 						alt="cover"
 						src={previewUrl}
-						class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto"
+						class="w-full rounded border border-border not-md:mx-auto"
 					/>
 					<Button onclick={handleUploadClick} secondary class=" px-2">Change image</Button>
 				{/if}
