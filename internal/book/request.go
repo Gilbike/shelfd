@@ -8,3 +8,12 @@ type createRequest struct {
 	PublishedYear *int     `json:"published_year"`
 	Description   *string  `json:"description"`
 }
+
+type updateRequest struct {
+	Title         *string   `json:"title"`
+	Authors       *[]string `json:"authors"`
+	Pages         *int      `json:"pages"`
+	ISBN          *string   `json:"isbn"`
+	PublishedYear *int      `json:"published_year"`
+	Description   *string   `json:"description"`
+}

@@ -3,6 +3,7 @@ package book
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 	"time"
@@ -35,6 +36,15 @@ type createPayload struct {
 	title         string
 	authors       []string
 	pages         int
+	isbn          *string
+	publishedYear *int
+	description   *string
+}
+
+type updatePayload struct {
+	title         *string
+	authors       *[]string
+	pages         *int
 	isbn          *string
 	publishedYear *int
 	description   *string
@@ -125,6 +135,38 @@ func (s *Service) UploadCover(ctx context.Context, id int64, mimeType string, co
 
 	// TODO: change to more typesafe implementation
 	err = s.repository.Update(ctx, id, map[string]any{"cover_url": url})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) Update(ctx context.Context, id int64, payload updatePayload) error {
+	fields := make(map[string]any)
+
+	// TODO: change repository method to accept the payload instead
+	if payload.title != nil {
+		slog.Info("add", slog.String("title", *payload.title))
+		fields["title"] = *payload.title
+	}
+	if payload.authors != nil {
+		fields["authors"] = *payload.authors
+	}
+	if payload.pages != nil {
+		fields["pages"] = *payload.pages
+	}
+	if payload.description != nil {
+		fields["description"] = *payload.description
+	}
+	if payload.isbn != nil {
+		fields["isbn"] = *payload.isbn
+	}
+	if payload.publishedYear != nil {
+		fields["published_year"] = *payload.publishedYear
+	}
+
+	err := s.repository.Update(ctx, id, fields)
 	if err != nil {
 		return err
 	}
