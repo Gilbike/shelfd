@@ -27,7 +27,7 @@
 	<Label.Root id={`${rest.name}-label`} for={rest.name}>
 		{label}
 		{#if optional}
-		<span>({_("common.optional")})</span>
+			<span>({_('common.optional')})</span>
 		{/if}
 	</Label.Root>
 	<input aria-labelledby={`${rest.name}-label`} bind:value class={styles} {...rest} />

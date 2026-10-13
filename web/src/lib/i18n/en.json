@@ -9,7 +9,7 @@
 		"signup_cta": "Don't have an account?",
 		"signin_cta": "Already have an account?"
 	},
-	"pagination": {"showing": "Showing {{from}} - {{to}}"},
+	"pagination": { "showing": "Showing {{from}} - {{to}}" },
 	"common": {
 		"optional": "optional"
 	},
