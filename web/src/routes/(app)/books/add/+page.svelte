@@ -135,24 +135,6 @@
 					<Button onclick={handleUploadClick} secondary class=" px-2">Change image</Button>
 				{/if}
 			</div>
-			<!-- <Button
-				raw
-				onclick={handleUploadClick}
-				type="button"
-				class="flex aspect-1/1.5 w-full flex-col items-center justify-center rounded border border-dashed border-primary not-md:mx-auto"
-			>
-				{#if previewUrl == null}
-					<ImageUp />
-					{_('books.upload_cover')}
-				{:else}
-					<!-- TODO: add text for replacing image -->
-			<!-- <img
-				alt="cover"
-				src={previewUrl}
-				class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto"
-			/> -->
-			<!-- {/if} -->
-			<!-- </Button> -->
 
 			<input
 				type="file"
@@ -180,7 +162,7 @@
 			/>
 			<div class="flex flex-col gap-1">
 				<p>{_('books.attributes.authors')} (min. 1 required)</p>
-				{#each authors as author, index (index)}
+				{#each authors as _author, index (index)}
 					<div class="flex flex-row gap-2">
 						<!-- TODO: extract input from forminput -->
 						<input
