@@ -19,6 +19,8 @@
 	let fileInput: HTMLInputElement | undefined = $state();
 	let previewUrl: string | null = $state(null);
 
+	let dropArea: HTMLDivElement | undefined = $state();
+
 	function handleError(error: ApiError) {
 		if (error.code === ERROR_CODES.INVALID_INPUT) {
 			errors = Object.fromEntries(
@@ -62,6 +64,43 @@
 		fileInput?.click();
 	}
 
+	function handleDrop(e: DragEvent) {
+		e.preventDefault();
+		if (e.dataTransfer == null) return;
+		const files = [...e.dataTransfer.items].map((item) => item.getAsFile()).filter((file) => file);
+		if (files.length == 0) return;
+		if (files[0] == null) return;
+
+		if (previewUrl) {
+			URL.revokeObjectURL(previewUrl);
+		}
+
+		previewUrl = URL.createObjectURL(files[0]);
+	}
+
+	function handleDragOver(e: DragEvent) {
+		if (e.dataTransfer == null) return;
+		const fileItems = [...e.dataTransfer.items].filter((item) => item.kind === 'file');
+		if (fileItems.length > 0) {
+			e.preventDefault();
+			if (fileItems.some((item) => item.type.startsWith('image/'))) {
+				e.dataTransfer.dropEffect = 'copy';
+			} else {
+				e.dataTransfer.dropEffect = 'none';
+			}
+		}
+	}
+
+	$effect(() => {
+		dropArea?.addEventListener('drop', handleDrop);
+		dropArea?.addEventListener('dragover', handleDragOver);
+
+		return () => {
+			dropArea?.removeEventListener('drop', handleDrop);
+			dropArea?.removeEventListener('dragover', handleDragOver);
+		};
+	});
+
 	$effect(() => {
 		return () => {
 			if (previewUrl) {
@@ -79,7 +118,24 @@
 			class="w-full not-md:mx-auto sm:max-w-1/3 sm:min-w-1/3 md:max-w-1/4 md:min-w-1/4 lg:max-w-1/5 lg:min-w-1/5 xl:max-w-1/6"
 			onsubmit={(e) => e.preventDefault()}
 		>
-			<Button
+			<div
+				bind:this={dropArea}
+				class="flex aspect-1/1.5 flex-col items-center justify-center gap-2 rounded border border-dashed border-primary p-2 not-md:mx-auto"
+			>
+				{#if previewUrl == null}
+					<ImageUp class="mb-2 text-foreground/60" size={32} />
+					<Button onclick={handleUploadClick} secondary class="w-fit! px-2">Upload image</Button>
+					<p class="text-sm text-foreground/60">Or drop the image here</p>
+				{:else}
+					<img
+						alt="cover"
+						src={previewUrl}
+						class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto"
+					/>
+					<Button onclick={handleUploadClick} secondary class=" px-2">Change image</Button>
+				{/if}
+			</div>
+			<!-- <Button
 				raw
 				onclick={handleUploadClick}
 				type="button"
@@ -90,13 +146,13 @@
 					{_('books.upload_cover')}
 				{:else}
 					<!-- TODO: add text for replacing image -->
-					<img
-						alt="cover"
-						src={previewUrl}
-						class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto"
-					/>
-				{/if}
-			</Button>
+			<!-- <img
+				alt="cover"
+				src={previewUrl}
+				class="aspect-1/1.5 w-full rounded border border-border not-md:mx-auto"
+			/> -->
+			<!-- {/if} -->
+			<!-- </Button> -->
 
 			<input
 				type="file"
