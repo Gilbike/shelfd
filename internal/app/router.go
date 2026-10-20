@@ -12,7 +12,7 @@ import (
 
 type RouteMap map[string]http.Handler
 
-func newRouter(routeMap RouteMap, middlewares *middleware.Manager, enableCors bool) http.Handler {
+func newRouter(routeMap RouteMap, middlewares *middleware.Manager, isDevelopment bool) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /api/v1/hello", func(w http.ResponseWriter, r *http.Request) {
@@ -26,11 +26,10 @@ func newRouter(routeMap RouteMap, middlewares *middleware.Manager, enableCors bo
 		mux.Handle(pattern, http.StripPrefix(prefix, handler))
 	}
 
-	web.EmbedWeb(mux)
-
-	if enableCors {
+	if isDevelopment {
 		return middlewares.Logging(middlewares.CORS(mux))
 	}
 
+	web.EmbedWeb(mux)
 	return middlewares.Logging(mux)
 }
