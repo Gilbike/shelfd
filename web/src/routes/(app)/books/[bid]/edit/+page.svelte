@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { apiRoute } from '$lib/api';
 	import type { Book } from '$lib/api/types';
@@ -9,7 +9,8 @@
 
 	const { data }: LayoutProps = $props();
 
-	function handleSuccess(_book: Book) {
+	async function handleSuccess(_book: Book) {
+		await invalidateAll(); // TODO: find better way, it wasnt working with invalidate() as intended
 		goto(resolve('/(app)/books/[bid]', { bid: data.book.id.toString() }));
 	}
 </script>
