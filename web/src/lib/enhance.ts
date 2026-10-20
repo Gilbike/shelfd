@@ -1,11 +1,10 @@
 // src/lib/actions/enhance.ts
-import { api, apiRoute } from '$lib/api';
-import type { Route } from './api';
+import { api, type RouteData } from '$lib/api';
 import { isApiError } from './api/error';
 import type { ApiError } from './api/types';
 
 type EnhanceOptions = {
-	route: Route;
+	route: RouteData;
 	onPending?: () => void;
 	onSuccess?: (data: unknown) => void;
 	onError?: (err: ApiError) => void;
@@ -20,7 +19,7 @@ export function enhance(node: HTMLFormElement, options: EnhanceOptions) {
 		options.onPending?.();
 
 		try {
-			const data = await api(apiRoute(options.route), {
+			const data = await api(options.route, {
 				body: JSON.stringify(payload)
 			});
 			if (isApiError(data)) {

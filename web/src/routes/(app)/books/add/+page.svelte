@@ -153,7 +153,7 @@
 		</form>
 		<form
 			use:enhance={{
-				route: 'books.create',
+				route: apiRoute('books.create'),
 				onError: handleError,
 				onSuccess: (book) => handleAddSuccess(book as Book)
 			}}

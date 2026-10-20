@@ -40,7 +40,7 @@
 <h1 class="font-semibold">{_('auth.signup')}</h1>
 <form
 	use:enhance={{
-		route: 'user.signup',
+		route: apiRoute('user.signup'),
 		onError: handleError,
 		onSuccess: () => handleSuccess()
 	}}

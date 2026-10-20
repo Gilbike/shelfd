@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { apiRoute } from '$lib/api';
 	import { ERROR_CODES } from '$lib/api/error';
 	import type { ApiError } from '$lib/api/types';
 	import { enhance } from '$lib/enhance';
@@ -24,7 +25,7 @@
 <h1 class="font-semibold">{_('auth.signin')}</h1>
 <form
 	use:enhance={{
-		route: 'user.auth',
+		route: apiRoute('user.auth'),
 		onError: handleError,
 		onSuccess: () => handleSuccess()
 	}}
