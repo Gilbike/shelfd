@@ -30,6 +30,9 @@ go.work.sum
 # .idea/
 # .vscode/
 
+# Built go binary
+server
+
 # persistent data created by the application (database and uploaded assets)
 data/
 
