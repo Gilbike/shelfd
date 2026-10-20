@@ -33,9 +33,15 @@
 	}
 
 	async function handleAddSuccess(book: Book) {
-		if (!uploadForm) return;
+		if (!uploadForm) {
+			goto(resolve('/(app)/books/[bid]', { bid: book.id.toString() }));
+			return;
+		}
 		const file = fileInput?.files?.[0];
-		if (!file) return;
+		if (!file) {
+			goto(resolve('/(app)/books/[bid]', { bid: book.id.toString() }));
+			return;
+		}
 
 		const body = new FormData();
 		body.append('cover', file);
