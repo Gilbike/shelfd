@@ -1,8 +1,8 @@
 import type { ApiError } from './types';
 
-type RouteData = {
+export type RouteData = {
 	path: string;
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 };
 
 const apiRoutes = {
@@ -14,6 +14,7 @@ const apiRoutes = {
 	'books.create': { path: '/v1/books', method: 'POST' },
 	'books.get': { path: '/v1/books/{id}', method: 'GET' },
 	'books.delete': { path: '/v1/books/{id}', method: 'DELETE' },
+	'books.update': { path: '/v1/books/{id}', method: 'PATCH' },
 	'books.cover.update': { path: '/v1/books/{id}/cover', method: 'PUT' }
 } as const satisfies Record<string, RouteData>;
 

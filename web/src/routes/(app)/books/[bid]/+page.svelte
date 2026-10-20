@@ -5,7 +5,7 @@
 	import { isApiError } from '$lib/api/error';
 	import Button from '$lib/components/shared/Button.svelte';
 	import { _ } from '$lib/i18n/index.svelte';
-	import { EllipsisVertical, Trash } from '@lucide/svelte';
+	import { EllipsisVertical, Pencil, Trash } from '@lucide/svelte';
 	import { DropdownMenu } from 'bits-ui';
 	import { fly } from 'svelte/transition';
 	import type { LayoutProps } from './$types';
@@ -54,7 +54,23 @@
 					{#snippet child({ wrapperProps, props, open })}
 						{#if open}
 							<div {...wrapperProps}>
-								<div {...props} class="w-48" transition:fly={{ duration: 160, opacity: 0, x: 20 }}>
+								<div
+									{...props}
+									class="w-48 *:not-last:mb-1"
+									transition:fly={{ duration: 160, opacity: 0, x: 20 }}
+								>
+									<DropdownMenu.Item>
+										{#snippet child({ props })}
+											<a
+												{...props}
+												href={resolve('/(app)/books/[bid]/edit', { bid: id.toString() })}
+												class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+											>
+												<Pencil size={16} />
+												{_('actions.edit')}
+											</a>
+										{/snippet}
+									</DropdownMenu.Item>
 									<DropdownMenu.Item onSelect={handleDeleteClick}>
 										{#snippet child({ props })}
 											<Button {...props} secondary class="flex flex-row items-center gap-1 px-2">
