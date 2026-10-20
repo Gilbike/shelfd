@@ -151,7 +151,7 @@ func (s *Service) Update(ctx context.Context, id int64, payload updatePayload) e
 		fields["title"] = *payload.title
 	}
 	if payload.authors != nil {
-		fields["authors"] = *payload.authors
+		fields["authors"] = strings.Join(*payload.authors, ";")
 	}
 	if payload.pages != nil {
 		fields["pages"] = *payload.pages
