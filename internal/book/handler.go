@@ -126,7 +126,7 @@ func (h *Handler) HandleBookUpdate(w http.ResponseWriter, r *http.Request) {
 		authors:       request.Authors,
 		pages:         request.Pages,
 		isbn:          request.ISBN,
-		publishedYear: request.Pages,
+		publishedYear: request.PublishedYear,
 		description:   request.Description,
 	})
 	if err != nil {
