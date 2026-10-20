@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Gilbike/shelfd/internal/middleware"
+	"github.com/Gilbike/shelfd/web"
 )
 
 type RouteMap map[string]http.Handler
@@ -24,6 +25,8 @@ func newRouter(routeMap RouteMap, middlewares *middleware.Manager, enableCors bo
 
 		mux.Handle(pattern, http.StripPrefix(prefix, handler))
 	}
+
+	web.EmbedWeb(mux)
 
 	if enableCors {
 		return middlewares.Logging(middlewares.CORS(mux))
