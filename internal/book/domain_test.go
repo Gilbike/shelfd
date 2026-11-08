@@ -7,7 +7,7 @@ import (
 	"github.com/Gilbike/shelfd/internal/core/errs"
 )
 
-func TestValidateTitle(t *testing.T) {
+func TestValidate(t *testing.T) {
 	mock_book := Book{
 		Title:   "",
 		Authors: []string{},
