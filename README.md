@@ -25,4 +25,4 @@ docker run --name shelfd -d -p 8080:8080 -v shelfd-data:/app/data shelfd:latest
 - 🏗️ Per instance social feed
 - 🏗️ Mobile app
 
-[cover_url]: https://raw.githubusercontent.com/gilbike/shelfd/refs/heads/main/.github/assets/cover.svg
+[cover_url]: https://raw.githubusercontent.com/Gilbike/shelfd/refs/heads/master/.github/assets/cover.jpg
