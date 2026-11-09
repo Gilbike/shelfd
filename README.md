@@ -14,6 +14,10 @@ docker build -t shelfd:latest .
 docker run --name shelfd -d -p 8080:8080 -v shelfd-data:/app/data shelfd:latest
 ```
 
+## Configuration
+
+Every configuration option and it's default value can be found in the [example env][example_env_url] file.
+
 ## Roadmap
 
 - ✅ CRUD Book management
@@ -26,3 +30,4 @@ docker run --name shelfd -d -p 8080:8080 -v shelfd-data:/app/data shelfd:latest
 - 🏗️ Mobile app
 
 [cover_url]: https://raw.githubusercontent.com/Gilbike/shelfd/refs/heads/master/.github/assets/cover.jpg
+[example_env_url]: https://github.com/Gilbike/shelfd/blob/master/.env.example
