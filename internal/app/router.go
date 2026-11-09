@@ -19,6 +19,10 @@ func newRouter(routeMap RouteMap, middlewares *middleware.Manager, isDevelopment
 		io.WriteString(w, "Hello, Shelfd!")
 	})
 
+	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
 	for route, handler := range routeMap {
 		pattern := fmt.Sprintf("/api/v1/%s/", route)
 		prefix := strings.TrimSuffix(pattern, "/")
