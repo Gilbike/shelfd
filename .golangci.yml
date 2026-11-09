@@ -1,5 +1,25 @@
 version: "2"
 linters:
-  default: all
+  enable:
+    - bodyclose
+    - sqlclosecheck
+    - rowserrcheck
+    - gosec
+    - noctx
+    - govet
+    - staticcheck
+    - errcheck
+    - errorlint
+    - copyloopvar
+    - gocritic
+  settings:
+    errcheck:
+      exclude-functions:
+        - io.WriteString
+        - (net/http.ResponseWriter).Write
+        - fmt.Sscanf
 run:
   timeout: 2m
+issues:
+  exclude-dirs:
+    - web
