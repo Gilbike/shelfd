@@ -7,6 +7,13 @@
 
 ## Getting started
 
+### Requirements
+
+The application is lightweight and compiles into a single binary with the frontend embedded.
+
+- **Binary size:** ~12 MB
+- **Memory footprint:** ~50 MB RAM at runtime
+
 ### Building the image yourself
 
 ```bash
