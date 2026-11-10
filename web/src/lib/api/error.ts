@@ -4,7 +4,8 @@ import type { ApiError } from './types';
 export const ERROR_CODES = {
 	INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
 	UNAUTHENTICATED: 'UNAUTHENTICATED',
-	INVALID_INPUT: 'INVALID_INPUT'
+	INVALID_INPUT: 'INVALID_INPUT',
+	ALREADY_EXISTS: 'RESOURCE_ALREADY_EXISTS'
 };
 
 export function isApiError(obj: unknown): obj is ApiError {

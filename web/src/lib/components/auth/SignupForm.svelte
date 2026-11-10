@@ -22,6 +22,8 @@
 					(err[1] as ApiValidationError[]).map((e) => e.code)
 				])
 			);
+		} else if (error.code === ERROR_CODES.ALREADY_EXISTS) {
+			errors['username'] = ['errors.username_taken'];
 		}
 	}
 
