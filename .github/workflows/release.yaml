@@ -74,7 +74,7 @@ jobs:
           files: ./release-assets/*
           generate_release_notes: true
   docker:
-    Name: "Release to DockerHub and GHCR"
+    name: "Release to DockerHub and GHCR"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
