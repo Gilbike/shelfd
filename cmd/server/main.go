@@ -32,10 +32,11 @@ func main() {
 	<-stop
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
 
 	if err := app.Shutdown(ctx); err != nil {
 		slog.Error("Shutdown failed, forcing exit", "error", err)
+		cancel()
 		os.Exit(1)
 	}
+	cancel()
 }

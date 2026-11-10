@@ -82,6 +82,7 @@ func (hasher *Argon2Hasher) VerifyPasswordHash(password string, hash string) boo
 		return false
 	}
 
+	//nolint:gosec // disable G115 Safety: len() should not return negative number
 	reqHash := argon2.IDKey([]byte(password), salt, time, memory, thread, uint32(len(dbHash)))
 
 	return subtle.ConstantTimeCompare(reqHash, dbHash) == 1

@@ -42,11 +42,7 @@ func (h *Handler) HandleUserCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.Create(r.Context(), userCreatePayload{
-		Username:    body.Username,
-		Password:    body.Password,
-		DisplayName: body.DisplayName,
-	})
+	user, err := h.service.Create(r.Context(), userCreatePayload(body))
 	if err != nil {
 		api.Error(w, api.NewApiError(err))
 		return

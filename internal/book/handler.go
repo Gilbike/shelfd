@@ -11,7 +11,7 @@ import (
 )
 
 // TODO: move to config
-const maxFileSize = 2 << 20 //2 MB
+const maxFileSize = 2 << 20 // 2 MB
 
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
@@ -167,7 +167,11 @@ func (h *Handler) HandleBookCoverUpload(w http.ResponseWriter, r *http.Request) 
 	}
 	defer file.Close()
 
-	h.service.UploadCover(r.Context(), id, mimeType, content, "/api/v1/assets/%s")
+	err = h.service.UploadCover(r.Context(), id, mimeType, content, "/api/v1/assets/%s")
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+	}
+
 	api.JSON(w, http.StatusCreated, map[string]any{"success": true})
 }
 

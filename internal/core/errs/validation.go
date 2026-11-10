@@ -48,9 +48,7 @@ func MergeValidationErrors(to error, from error) error {
 	keys := maps.Keys(fromError)
 
 	for key := range keys {
-		for _, entry := range fromError[key] {
-			toError[key] = append(toError[key], entry)
-		}
+		toError[key] = append(toError[key], fromError[key]...)
 	}
 
 	return toError

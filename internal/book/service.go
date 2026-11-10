@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -125,8 +126,8 @@ func (s *Service) UploadCover(ctx context.Context, id int64, mimeType string, co
 
 	fileName := fmt.Sprintf("b%d.%s", id, fileExtension)
 
-	// TODO: move to data folder with db
-	err := os.WriteFile(fmt.Sprintf("data/%s", fileName), content, 0644)
+	cleanName := filepath.Base(filepath.Clean(fileName))
+	err := os.WriteFile(filepath.Join("data", cleanName), content, 0600)
 	if err != nil {
 		return fmt.Errorf("failed to write cover file: %w", err)
 	}

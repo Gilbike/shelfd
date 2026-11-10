@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Gilbike/shelfd/internal/config"
 	"github.com/Gilbike/shelfd/internal/database"
@@ -66,8 +67,11 @@ func New(cfg config.Config) (*App, error) {
 
 	// setup http server
 	server := &http.Server{
-		Addr:    ":" + cfg.Port,
-		Handler: handler,
+		Addr:              ":" + cfg.Port,
+		Handler:           handler,
+		ReadHeaderTimeout: 3 * time.Second,
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      10 * time.Second,
 	}
 	app.server = server
 

@@ -71,6 +71,7 @@ func (r *Repository) FetchAll(ctx context.Context, p pagination, s sorting) ([]B
 		OFFSET ?;
 	`
 
+	//nolint:gosec // disable G201 // Safety: whitelisted with struct methods
 	query := fmt.Sprintf(rawQuery, s.Column(), s.Direction())
 
 	var totalCount int64
@@ -86,7 +87,7 @@ func (r *Repository) FetchAll(ctx context.Context, p pagination, s sorting) ([]B
 	}
 	defer rows.Close()
 
-	var books []Book = []Book{}
+	books := []Book{}
 
 	for rows.Next() {
 		var authorsRaw string
@@ -108,6 +109,11 @@ func (r *Repository) FetchAll(ctx context.Context, p pagination, s sorting) ([]B
 		}
 		book.Authors = strings.Split(authorsRaw, authorsSeparator)
 		books = append(books, book)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, -1, err
 	}
 
 	return books, totalCount, nil
@@ -169,7 +175,9 @@ func (r *Repository) Update(ctx context.Context, id int64, dirtyValues map[strin
 	}
 	values = append(values, id)
 
+	//nolint:gosec // disable G201 // Safety: values and fields are sanitized with sanitizeFields
 	query := fmt.Sprintf("UPDATE books SET %s WHERE id = ?", fields)
+	//nolint:gosec // disable G701 // Safety: values and fields are sanitized with sanitizeFields
 	result, err := r.db.ExecContext(ctx, query, values...)
 	if err != nil {
 		return fmt.Errorf("failed to update book %d: %w", id, err)
