@@ -26,7 +26,7 @@ jobs:
               - 'go.sum'
               - 'internal/**'
             frontend:
-              - 'web/**
+              - 'web/**'
   test-and-lint-backend:
     name: Backend
     needs: changes
