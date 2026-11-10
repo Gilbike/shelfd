@@ -17,13 +17,10 @@
 	function handleError(error: ApiError) {
 		if (error.code === ERROR_CODES.INVALID_INPUT) {
 			errors = Object.fromEntries(
-				Object.entries(error.details!).map((err) => [
-					err[0],
-					err[1] as ApiValidationError[]
-				])
+				Object.entries(error.details!).map((err) => [err[0], err[1] as ApiValidationError[]])
 			);
 		} else if (error.code === ERROR_CODES.ALREADY_EXISTS) {
-			errors['username'] = [{code: 'errors.username_taken'}];
+			errors['username'] = [{ code: 'errors.username_taken' }];
 		}
 	}
 

@@ -7,13 +7,13 @@
 	import Button from '$lib/components/shared/Button.svelte';
 	import FormInput from '$lib/components/shared/FormInput.svelte';
 	import { enhance } from '$lib/enhance';
-	import { _, type ErrorKeys } from '$lib/i18n/index.svelte';
+	import { _ } from '$lib/i18n/index.svelte';
 	import { ImageUp, Plus, Trash } from '@lucide/svelte';
 	import { Label } from 'bits-ui';
 
 	let authors: string[] = $state([]);
 
-	let errors: Record<string, ErrorKeys[]> = $state({});
+	let errors: Record<string, ApiValidationError[]> = $state({});
 
 	let uploadForm: HTMLFormElement | undefined = $state();
 	let fileInput: HTMLInputElement | undefined = $state();
@@ -24,10 +24,7 @@
 	function handleError(error: ApiError) {
 		if (error.code === ERROR_CODES.INVALID_INPUT) {
 			errors = Object.fromEntries(
-				Object.entries(error.details!).map((err) => [
-					err[0],
-					(err[1] as ApiValidationError[]).map((e) => e.code)
-				])
+				Object.entries(error.details!).map((err) => [err[0], err[1] as ApiValidationError[]])
 			);
 		}
 	}
@@ -200,7 +197,9 @@
 				{#if errors['authors']}
 					<ul>
 						{#each errors['authors'] as error, index (index)}
-							<li class="text-sm leading-tight font-light text-red-600">{_(error)}</li>
+							<li class="text-sm leading-tight font-light text-red-600">
+								{_(error.code, error.params)}
+							</li>
 						{/each}
 					</ul>
 				{/if}

@@ -40,7 +40,7 @@
 		autocomplete="username"
 		required
 		aria-required
-		errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
+		errors={isCredentialsOk ? undefined : [{ code: 'errors.invalid_credentials' }]}
 	/>
 	<FormInput
 		id="password"
@@ -51,7 +51,7 @@
 		autocomplete="current-password"
 		required
 		aria-required
-		errors={isCredentialsOk ? undefined : ['errors.invalid_credentials']}
+		errors={isCredentialsOk ? undefined : [{ code: 'errors.invalid_credentials' }]}
 	/>
 	<Button type="submit">{_('auth.signin')}</Button>
 </form>

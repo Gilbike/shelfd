@@ -3,7 +3,7 @@
 	import { ERROR_CODES } from '$lib/api/error';
 	import type { ApiError, ApiValidationError, Book } from '$lib/api/types';
 	import { enhance } from '$lib/enhance';
-	import { _, type ErrorKeys } from '$lib/i18n/index.svelte';
+	import { _ } from '$lib/i18n/index.svelte';
 	import { Plus, Trash } from '@lucide/svelte';
 	import { Label } from 'bits-ui';
 	import Button from '../shared/Button.svelte';
@@ -17,17 +17,14 @@
 	}
 
 	let authors: string[] = $state([]);
-	let errors: Record<string, ErrorKeys[]> = $state({});
+	let errors: Record<string, ApiValidationError[]> = $state({});
 
 	const { route, onSuccess, base, buttonLabel = _('actions.add') }: BookFormProps = $props();
 
 	function handleError(error: ApiError) {
 		if (error.code === ERROR_CODES.INVALID_INPUT) {
 			errors = Object.fromEntries(
-				Object.entries(error.details!).map((err) => [
-					err[0],
-					(err[1] as ApiValidationError[]).map((e) => e.code)
-				])
+				Object.entries(error.details!).map((err) => [err[0], err[1] as ApiValidationError[]])
 			);
 		}
 	}
@@ -89,7 +86,9 @@
 		{#if errors['authors']}
 			<ul>
 				{#each errors['authors'] as error, index (index)}
-					<li class="text-sm leading-tight font-light text-red-600">{_(error)}</li>
+					<li class="text-sm leading-tight font-light text-red-600">
+						{_(error.code, error.params)}
+					</li>
 				{/each}
 			</ul>
 		{/if}
