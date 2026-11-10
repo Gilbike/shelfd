@@ -4,9 +4,12 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+workflow_dispatch:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   changes:
     name: Detect Changes
@@ -30,7 +33,7 @@ jobs:
   test-and-lint-backend:
     name: Backend
     needs: changes
-    if: ${{ needs.changes.outputs.backend == 'true' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -51,7 +54,7 @@ jobs:
   test-and-lint-frontend:
     name: Frontend
     needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -64,6 +67,7 @@ jobs:
           version: 11
           runtime: node@22
           cache: true
+          cache-dependency-path: web/pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Typecheck
