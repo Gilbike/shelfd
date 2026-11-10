@@ -26,6 +26,3 @@ linters:
         - G104
 run:
   timeout: 2m
-issues:
-  exclude-dirs:
-    - web
