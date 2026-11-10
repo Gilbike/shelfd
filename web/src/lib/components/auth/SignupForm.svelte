@@ -5,25 +5,25 @@
 	import { ERROR_CODES, isApiError } from '$lib/api/error';
 	import type { ApiError, ApiValidationError } from '$lib/api/types';
 	import { enhance } from '$lib/enhance';
-	import { _, type ErrorKeys } from '$lib/i18n/index.svelte';
+	import { _ } from '$lib/i18n/index.svelte';
 	import Button from '../shared/Button.svelte';
 	import FormInput from '../shared/FormInput.svelte';
 
 	let username = $state('');
 	let password = $state('');
 
-	let errors: Record<string, ErrorKeys[]> = $state({});
+	let errors: Record<string, ApiValidationError[]> = $state({});
 
 	function handleError(error: ApiError) {
 		if (error.code === ERROR_CODES.INVALID_INPUT) {
 			errors = Object.fromEntries(
 				Object.entries(error.details!).map((err) => [
 					err[0],
-					(err[1] as ApiValidationError[]).map((e) => e.code)
+					err[1] as ApiValidationError[]
 				])
 			);
 		} else if (error.code === ERROR_CODES.ALREADY_EXISTS) {
-			errors['username'] = ['errors.username_taken'];
+			errors['username'] = [{code: 'errors.username_taken'}];
 		}
 	}
 

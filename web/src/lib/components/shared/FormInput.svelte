@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { _, type ErrorKeys } from '$lib/i18n/index.svelte';
+	import type { ApiValidationError } from '$lib/api/types';
+	import { _ } from '$lib/i18n/index.svelte';
 	import { Label } from 'bits-ui';
 	import clsx from 'clsx';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	interface FormInputProps {
 		label: string;
-		errors?: ErrorKeys[];
+		errors?: ApiValidationError[];
 		name: string;
 		optional?: boolean;
 	}
@@ -34,7 +35,7 @@
 	{#if errors}
 		<ul>
 			{#each errors as error, index (index)}
-				<li class="text-sm leading-tight font-light text-red-600">{_(error)}</li>
+				<li class="text-sm leading-tight font-light text-red-600">{_(error.code, error.params)}</li>
 			{/each}
 		</ul>
 	{/if}

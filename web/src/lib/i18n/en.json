@@ -35,8 +35,8 @@
 	},
 	"errors": {
 		"required": "Field is required",
-		"min_length": "Must be at least characters",
-		"max_length": "Must be at most characters",
+		"min_length": "Must be at least {{min}} characters",
+		"max_length": "Must be at most {{max}} characters",
 		"invalid_charset": "Invalid character",
 		"must_contain_lower": "Must contain a lower case letter",
 		"must_contain_upper": "Must contain a upper case letter",
