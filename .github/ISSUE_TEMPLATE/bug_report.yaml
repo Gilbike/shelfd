@@ -1,7 +1,7 @@
 name: Bug Report
 description: Report a bug or unexpected behaviour
 type: bug
-labels: ["bug"]
+labels: ["t:bug"]
 body:
   - type: markdown
     attributes:
