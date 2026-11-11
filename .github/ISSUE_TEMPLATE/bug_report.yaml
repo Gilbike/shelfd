@@ -1,0 +1,78 @@
+name: Bug Report
+description: Report a bug or unexpected behaviour
+type: bug
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking your time and helping to improve the project with the submission.
+
+        Before submitting make sure if it wasn't already submitted or fixed in the latest release.
+
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: Check before submitting
+      options:
+        - label: I checked for any duplication and released fixes
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: Give us a clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce-steps
+    attributes:
+      label: To Reproduce
+      description: Give us the steps to reproduce the behavior
+      placeholder: |
+        1. 
+        2. 
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Tell us what is your expected behaviour
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment-os
+    attributes:
+      label: What OS is your shelfd instance running on?
+      multiple: false
+      options:
+        - Linux
+        - Window
+
+  - type: checkboxes
+    id: environment-docker
+    attributes:
+      label: Are you using Docker or any other containerization tool (detail below)?
+      options:
+        - label: Yes, I am using a containerization tool (Docker or something other)
+
+  - type: input
+    id: version
+    attributes:
+      label: Shelfd version
+      description: What version of shelfd are you running?
+      placeholder: "v0.x.x"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional context
+      description: Add relevant information to the issue (log files, screenshots, containerization tool if not Docker). Remove any sensitive information before submitting.
