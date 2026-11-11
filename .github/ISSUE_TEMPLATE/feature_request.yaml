@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest an idea for the project
+type: feature
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping the project.
+
+        Before submitting make sure to check if the feature idea wasn't already requested or implemented in the latest release. Also please keep the scope of the request focused on one idea.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem statement or motivation
+      description: Explain what problem you're trying to solve, why current solutions fall short, or what inspired this idea.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: Tell us what you think what would be the ideal implementation/solution?
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional context
+      description: Add any relevant information.

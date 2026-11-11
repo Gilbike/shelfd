@@ -54,6 +54,8 @@ body:
       options:
         - Linux
         - Window
+    validations:
+      required: true
 
   - type: checkboxes
     id: environment-docker
