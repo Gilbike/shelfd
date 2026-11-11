@@ -17,6 +17,7 @@
 
 	let uploadForm: HTMLFormElement | undefined = $state();
 	let fileInput: HTMLInputElement | undefined = $state();
+	let coverFile: File | undefined = $state();
 	let previewUrl: string | null = $state(null);
 
 	let dropArea: HTMLDivElement | undefined = $state();
@@ -34,14 +35,13 @@
 			goto(resolve('/(app)/books/[bid]', { bid: book.id.toString() }));
 			return;
 		}
-		const file = fileInput?.files?.[0];
-		if (!file) {
+		if (!coverFile) {
 			goto(resolve('/(app)/books/[bid]', { bid: book.id.toString() }));
 			return;
 		}
 
 		const body = new FormData();
-		body.append('cover', file);
+		body.append('cover', coverFile);
 
 		await api(apiRoute('books.cover.update', { id: book.id }), {
 			body
@@ -61,6 +61,7 @@
 		}
 
 		previewUrl = URL.createObjectURL(file);
+		coverFile = file;
 	}
 
 	function handleUploadClick() {
@@ -79,19 +80,13 @@
 		}
 
 		previewUrl = URL.createObjectURL(files[0]);
+		coverFile = files[0];
 	}
 
 	function handleDragOver(e: DragEvent) {
 		if (e.dataTransfer == null) return;
-		const fileItems = [...e.dataTransfer.items].filter((item) => item.kind === 'file');
-		if (fileItems.length > 0) {
-			e.preventDefault();
-			if (fileItems.some((item) => item.type.startsWith('image/'))) {
-				e.dataTransfer.dropEffect = 'copy';
-			} else {
-				e.dataTransfer.dropEffect = 'none';
-			}
-		}
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
 	}
 
 	$effect(() => {
