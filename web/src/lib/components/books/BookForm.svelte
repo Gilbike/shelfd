@@ -123,7 +123,7 @@
 		id="description"
 		aria-labelledby="description_label"
 		class="flex-1 rounded border border-border bg-surface px-2 py-1 outline-primary"
-		defaultValue={base?.description}
+		defaultValue={base && base.description != undefined ? base.description : ''}
 		rows="3"></textarea>
 	<Button>
 		{buttonLabel}
