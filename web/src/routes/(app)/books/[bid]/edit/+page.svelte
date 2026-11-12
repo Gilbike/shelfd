@@ -16,8 +16,11 @@
 </script>
 
 <div class="p-4">
+	<h1 class="text-2xl font-bold">
+		{_('actions.edit')} <span class="font-normal">{data.book.title}</span>
+	</h1>
 	<BookForm
-		buttonLabel={_('actions.edit')}
+		buttonLabel={_('actions.save')}
 		route={apiRoute('books.update', { id: data.book.id })}
 		base={data.book}
 		onSuccess={handleSuccess}

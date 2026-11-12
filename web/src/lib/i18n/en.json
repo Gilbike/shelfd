@@ -16,7 +16,8 @@
 	"actions": {
 		"add": "Add",
 		"delete": "Delete",
-		"edit": "Edit"
+		"edit": "Edit",
+		"save": "Save"
 	},
 	"books": {
 		"attributes": {
