@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import BookCard from '$lib/components/books/BookCard.svelte';
+	import Title from '$lib/components/shared/Title.svelte';
 	import { _ } from '$lib/i18n/index.svelte.js';
 	import { ChevronLeft, ChevronRight, Plus } from '@lucide/svelte';
 	import { Pagination } from 'bits-ui';
@@ -20,6 +21,7 @@
 	const lastIndex = $derived(data.metadata.page * data.metadata.perPage);
 </script>
 
+<Title text={_('books.books')} />
 <div class="flex h-dvh flex-col overflow-hidden p-4">
 	<div class="mb-4 flex flex-row items-center justify-between">
 		<div>

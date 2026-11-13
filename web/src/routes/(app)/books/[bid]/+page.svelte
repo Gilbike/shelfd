@@ -4,6 +4,7 @@
 	import { api, apiRoute } from '$lib/api';
 	import { isApiError } from '$lib/api/error';
 	import Button from '$lib/components/shared/Button.svelte';
+	import Title from '$lib/components/shared/Title.svelte';
 	import { _ } from '$lib/i18n/index.svelte';
 	import { EllipsisVertical, Pencil, Trash } from '@lucide/svelte';
 	import { DropdownMenu } from 'bits-ui';
@@ -25,6 +26,7 @@
 	}
 </script>
 
+<Title text={title} />
 <div class="flex gap-4 p-4 not-md:flex-col">
 	{#if cover_url == null}
 		<div
