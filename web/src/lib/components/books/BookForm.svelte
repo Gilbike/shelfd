@@ -117,6 +117,7 @@
 	/>
 	<Label.Root id="description_label" for="description">
 		{_('books.attributes.description')}
+		({_('common.optional')})
 	</Label.Root>
 	<textarea
 		name="description"
