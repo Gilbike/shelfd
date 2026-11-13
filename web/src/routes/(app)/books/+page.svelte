@@ -22,7 +22,7 @@
 </script>
 
 <Title text={_('books.books')} />
-<div class="flex h-dvh flex-col overflow-hidden p-4">
+<div class="flex h-full flex-col p-4">
 	<div class="mb-4 flex flex-row items-center justify-between">
 		<div>
 			<h1 class="text-2xl font-bold">{_('books.books')} ({data.metadata.totalBooks})</h1>

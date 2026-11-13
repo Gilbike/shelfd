@@ -28,8 +28,10 @@
 	}
 </script>
 
-<nav class="flex flex-col justify-between border-r border-r-border bg-surface p-4">
-	<div>
+<nav
+	class="flex flex-row justify-between border-r border-r-border bg-surface px-4 py-2 md:flex-col md:py-4"
+>
+	<div class="flex flex-col gap-2">
 		<Tooltip.Provider delayDuration={200} disableHoverableContent={true}>
 			<Tooltip.Root>
 				<Tooltip.Trigger>
@@ -39,6 +41,7 @@
 					>
 						<LibraryBig />
 					</a>
+					<p class="mt-0.5 text-xs text-foreground/60 md:hidden">{_('books.books')}</p>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="right" forceMount>
 					{#snippet child({ wrapperProps, props, open })}
@@ -64,7 +67,14 @@
 
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger class="interactive-secondary cursor-pointer rounded p-2">
-			<User />
+			{#snippet child({ props })}
+				<div class="flex flex-col items-center">
+					<button {...props}>
+						<User />
+					</button>
+					<p class="mt-0.5 text-xs text-foreground/60 md:hidden">{_('profile.profile')}</p>
+				</div>
+			{/snippet}
 		</DropdownMenu.Trigger>
 
 		<DropdownMenu.Content side="right" align="end" sideOffset={8} forceMount>

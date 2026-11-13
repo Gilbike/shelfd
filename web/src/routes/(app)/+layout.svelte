@@ -4,7 +4,9 @@
 	const { children } = $props();
 </script>
 
-<Navbar />
-<main class="flex-1">
-	{@render children()}
-</main>
+<div class="flex h-dvh w-full flex-col-reverse overflow-hidden md:flex-row">
+	<Navbar />
+	<main class="min-h-0 flex-1 overflow-y-auto">
+		{@render children()}
+	</main>
+</div>
