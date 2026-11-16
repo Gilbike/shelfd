@@ -16,6 +16,7 @@ type Book struct {
 	CoverUrl      *string   `json:"cover_url"`
 	PublishedYear *int      `json:"published_year"`
 	Description   *string   `json:"description"`
+	Collection    *string   `json:"collection,omitempty"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 }

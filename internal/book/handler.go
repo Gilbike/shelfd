@@ -15,7 +15,7 @@ const maxFileSize = 2 << 20 // 2 MB
 
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
-	Get(ctx context.Context, id int64) (*Book, error)
+	Get(ctx context.Context, userId int64, bookId int64) (*Book, error)
 	Create(ctx context.Context, payload createPayload) (*Book, error)
 	Update(ctx context.Context, id int64, payload updatePayload) error
 	Delete(ctx context.Context, id int64) error
@@ -71,7 +71,13 @@ func (h *Handler) HandleBookGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := h.service.Get(r.Context(), id)
+	userId, ok := middleware.UserIDFromContext(r.Context())
+	if !ok {
+		api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
+		return
+	}
+
+	book, err := h.service.Get(r.Context(), userId, id)
 	if err != nil {
 		api.Error(w, api.NewApiError(err))
 		return

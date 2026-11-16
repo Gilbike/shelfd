@@ -22,6 +22,10 @@ func (s *Service) SetBookCollection(ctx context.Context, payload *UserBook) erro
 	return s.repository.UpsertCollection(ctx, payload.UserId, payload.BookId, payload.CollectionName)
 }
 
-func (s *Service) GetBookCollection(ctx context.Context, userId int64, bookId int64) (string, error) {
-	return s.repository.FetchBookCollectionForUser(ctx, userId, bookId)
+func (s *Service) GetBookCollection(ctx context.Context, userId int64, bookId int64) *string {
+	collection, err := s.repository.FetchBookCollectionForUser(ctx, userId, bookId)
+	if err != nil {
+		return nil
+	}
+	return &collection
 }

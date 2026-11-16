@@ -20,6 +20,10 @@ type repository interface {
 	Update(ctx context.Context, id int64, dirtyFields map[string]any) error
 }
 
+type bookCollectionFetcher interface {
+	GetBookCollection(ctx context.Context, userId int64, bookId int64) *string
+}
+
 type listFilters struct {
 	page   int
 	sortBy string
@@ -52,12 +56,14 @@ type updatePayload struct {
 }
 
 type Service struct {
-	repository repository
+	repository        repository
+	collectionFetcher bookCollectionFetcher
 }
 
-func NewService(repository repository) *Service {
+func NewService(repository repository, collectionFetcher bookCollectionFetcher) *Service {
 	return &Service{
-		repository: repository,
+		repository:        repository,
+		collectionFetcher: collectionFetcher,
 	}
 }
 
@@ -76,8 +82,16 @@ func (s *Service) List(ctx context.Context, filters listFilters) (*listResult, e
 	}, nil
 }
 
-func (s *Service) Get(ctx context.Context, id int64) (*Book, error) {
-	return s.repository.FindById(ctx, id)
+func (s *Service) Get(ctx context.Context, userId int64, bookId int64) (*Book, error) {
+	book, err := s.repository.FindById(ctx, bookId)
+	if err != nil {
+		return nil, err
+	}
+
+	collection := s.collectionFetcher.GetBookCollection(ctx, userId, bookId)
+	book.Collection = collection
+
+	return book, nil
 }
 
 func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, error) {
