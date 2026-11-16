@@ -6,7 +6,17 @@
 	import Button from '$lib/components/shared/Button.svelte';
 	import Title from '$lib/components/shared/Title.svelte';
 	import { _ } from '$lib/i18n/index.svelte';
-	import { EllipsisVertical, Pencil, Trash } from '@lucide/svelte';
+	import {
+		BookBookmark,
+		BookDashed,
+		BookExclamationPoint,
+		BookOpen,
+		BookOpenCheck,
+		ChevronDown,
+		EllipsisVertical,
+		Pencil,
+		Trash
+	} from '@lucide/svelte';
 	import { DropdownMenu } from 'bits-ui';
 	import { fly } from 'svelte/transition';
 	import type { LayoutProps } from './$types';
@@ -80,6 +90,58 @@
 												{_('actions.delete')}
 											</Button>
 										{/snippet}
+									</DropdownMenu.Item>
+								</div>
+							</div>
+						{/if}
+					{/snippet}
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		</div>
+		<div
+			class="items-centerrounded mt-2 flex w-fit flex-row overflow-hidden rounded border border-border"
+		>
+			<p class="flex flex-row items-center gap-2 border-r border-r-border px-2 py-2">
+				<BookDashed size={16} />
+				{_('books.collections.not_added')}
+			</p>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger class="interactive-secondary cursor-pointer px-2">
+					<ChevronDown />
+				</DropdownMenu.Trigger>
+
+				<DropdownMenu.Content side="bottom" align="end" sideOffset={8} forceMount>
+					{#snippet child({ wrapperProps, props, open })}
+						{#if open}
+							<div {...wrapperProps}>
+								<div
+									{...props}
+									class="w-48 *:not-last:mb-1"
+									transition:fly={{ duration: 160, opacity: 0, y: -20 }}
+								>
+									<DropdownMenu.Item
+										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+									>
+										<BookBookmark size={16} />
+										{_('books.collections.want_to_read')}
+									</DropdownMenu.Item>
+									<DropdownMenu.Item
+										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+									>
+										<BookOpen size={16} />
+										{_('books.collections.currently_reading')}
+									</DropdownMenu.Item>
+									<DropdownMenu.Item
+										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+									>
+										<BookExclamationPoint size={16} />
+										{_('books.collections.backlog')}
+									</DropdownMenu.Item>
+									<DropdownMenu.Item
+										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+									>
+										<BookOpenCheck size={16} />
+										{_('books.collections.completed')}
 									</DropdownMenu.Item>
 								</div>
 							</div>
