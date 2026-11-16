@@ -3,7 +3,8 @@ package collection
 import "context"
 
 type repository interface {
-	UpsertBuiltIn(ctx context.Context, userId int64, bookId int64, collection string) error
+	FetchBookCollectionForUser(ctx context.Context, userId int64, bookId int64) (string, error)
+	UpsertCollection(ctx context.Context, userId int64, bookId int64, collection string) error
 }
 
 type Service struct {
@@ -18,5 +19,9 @@ func (s *Service) SetBookCollection(ctx context.Context, payload *UserBook) erro
 	if err := payload.IsCollectionNameValid(); err != nil {
 		return err
 	}
-	return s.repository.UpsertBuiltIn(ctx, payload.UserId, payload.BookId, payload.CollectionName)
+	return s.repository.UpsertCollection(ctx, payload.UserId, payload.BookId, payload.CollectionName)
+}
+
+func (s *Service) GetBookCollection(ctx context.Context, userId int64, bookId int64) (string, error) {
+	return s.repository.FetchBookCollectionForUser(ctx, userId, bookId)
 }

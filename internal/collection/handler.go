@@ -29,7 +29,6 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares
 	mux.Handle("PUT "+pattern+"/", middlewares.HelperSecure(h.HandleBookCollectionSet))
 }
 
-// TODO: check for book existense
 func (h *Handler) HandleBookCollectionSet(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	bookId, err := strconv.ParseInt(idStr, 10, 64)
@@ -64,6 +63,5 @@ func (h *Handler) HandleBookCollectionSet(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
 	api.JSON(w, http.StatusCreated, map[string]any{"ok": true})
 }

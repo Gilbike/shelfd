@@ -19,7 +19,30 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db}
 }
 
-func (r *Repository) UpsertBuiltIn(ctx context.Context, userId int64, bookId int64, collection string) error {
+func (r *Repository) FetchBookCollectionForUser(ctx context.Context, userId int64, bookId int64) (string, error) {
+	const query = `
+		SELECT collection
+		FROM user_books
+		WHERE user_id = ? AND book_id = ?;
+	`
+
+	var collection string
+
+	row := r.db.QueryRowContext(ctx, query, userId, bookId)
+	if err := row.Err(); err != nil {
+		return "", fmt.Errorf("failed to get book collection for user: %w", err)
+	}
+	if err := row.Scan(&collection); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", errs.ErrNotFound
+		}
+		return "", fmt.Errorf("failed to get collection by user and book: %w", err)
+	}
+
+	return collection, nil
+}
+
+func (r *Repository) UpsertCollection(ctx context.Context, userId int64, bookId int64, collection string) error {
 	const query = `
 		INSERT INTO user_books (user_id, book_id, collection)
 		VALUES (?, ?, ?)
