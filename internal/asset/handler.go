@@ -18,12 +18,8 @@ func NewHandler() *Handler {
 	return &Handler{}
 }
 
-func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("GET /{name}", h.HandleAssetGet)
-
-	return middlewares.WithSession(middlewares.RequireAuth(mux))
+func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
+	mux.Handle("GET "+pattern+"/{name}", middlewares.HelperSecure(h.HandleAssetGet))
 }
 
 func (h *Handler) HandleAssetGet(w http.ResponseWriter, r *http.Request) {

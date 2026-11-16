@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 
 	"github.com/Gilbike/shelfd/internal/middleware"
 	"github.com/Gilbike/shelfd/web"
 )
 
-type RouteMap map[string]http.Handler
+type ResourceHandler interface {
+	RegisterRoutes(mux *http.ServeMux, prefix string, middlewares *middleware.Manager)
+}
+
+type RouteMap map[string]ResourceHandler
 
 func newRouter(routeMap RouteMap, middlewares *middleware.Manager, isDevelopment bool) http.Handler {
 	mux := http.NewServeMux()
@@ -24,10 +27,8 @@ func newRouter(routeMap RouteMap, middlewares *middleware.Manager, isDevelopment
 	})
 
 	for route, handler := range routeMap {
-		pattern := fmt.Sprintf("/api/v1/%s/", route)
-		prefix := strings.TrimSuffix(pattern, "/")
-
-		mux.Handle(pattern, http.StripPrefix(prefix, handler))
+		fullRoute := fmt.Sprintf("/api/v1/%s", route)
+		handler.RegisterRoutes(mux, fullRoute, middlewares)
 	}
 
 	if isDevelopment {

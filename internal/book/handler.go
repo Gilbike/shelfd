@@ -32,17 +32,13 @@ func NewHandler(service service) *Handler {
 	}
 }
 
-func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("GET /", h.HandleBookList)
-	mux.HandleFunc("POST /", h.HandleBookCreate)
-	mux.HandleFunc("GET /{id}", h.HandleBookGet)
-	mux.HandleFunc("PATCH /{id}", h.HandleBookUpdate)
-	mux.HandleFunc("PUT /{id}/cover", h.HandleBookCoverUpload) // TODO: probably should change to PATCH
-	mux.HandleFunc("DELETE /{id}", h.HandleBookDelete)
-
-	return middlewares.WithSession(middlewares.RequireAuth(mux))
+func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
+	mux.Handle("GET "+pattern+"/", middlewares.HelperSecure(h.HandleBookList))
+	mux.Handle("POST "+pattern+"/", middlewares.HelperSecure(h.HandleBookCreate))
+	mux.Handle("GET "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookGet))
+	mux.Handle("PATCH "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookUpdate))
+	mux.Handle("PUT "+pattern+"/{id}/cover", middlewares.HelperSecure(h.HandleBookCoverUpload)) // TODO: probably should change to PATCH
+	mux.Handle("DELETE "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookDelete))
 }
 
 func (h *Handler) HandleBookList(w http.ResponseWriter, r *http.Request) {
