@@ -4,6 +4,7 @@ import "context"
 
 type repository interface {
 	FetchBookCollectionForUser(ctx context.Context, userId int64, bookId int64) (string, error)
+	FetchBookUserCount(ctx context.Context, bookId int64) (int64, error)
 	UpsertCollection(ctx context.Context, userId int64, bookId int64, collection string) error
 }
 
@@ -28,4 +29,12 @@ func (s *Service) GetBookCollection(ctx context.Context, userId int64, bookId in
 		return nil
 	}
 	return &collection
+}
+
+func (s *Service) IsBookInCollection(ctx context.Context, bookId int64) (bool, error) {
+	count, err := s.repository.FetchBookUserCount(ctx, bookId)
+	if err != nil {
+		return false, err
+	}
+	return count != 0, err
 }

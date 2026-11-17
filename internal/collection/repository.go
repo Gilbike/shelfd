@@ -42,6 +42,23 @@ func (r *Repository) FetchBookCollectionForUser(ctx context.Context, userId int6
 	return collection, nil
 }
 
+func (r *Repository) FetchBookUserCount(ctx context.Context, bookId int64) (int64, error) {
+	const query = `
+		SELECT COUNT(user_id)
+		FROM user_books
+		WHERE book_id = ?;
+	`
+
+	var count int64
+
+	row := r.db.QueryRowContext(ctx, query, bookId)
+	if err := row.Scan(&count); err != nil {
+		return -1, fmt.Errorf("failed to get user count for book: %w", err)
+	}
+
+	return count, nil
+}
+
 func (r *Repository) UpsertCollection(ctx context.Context, userId int64, bookId int64, collection string) error {
 	const query = `
 		INSERT INTO user_books (user_id, book_id, collection)

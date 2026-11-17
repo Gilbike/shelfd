@@ -89,9 +89,14 @@ func (mr *mockRepository) Update(ctx context.Context, id int64, dirtyFields map[
 
 // mock collection fetcher
 type mockCollectionFetcher struct {
-	getBookCollection func(ctx context.Context, userId int64, bookId int64) *string
+	getBookCollection  func(ctx context.Context, userId int64, bookId int64) *string
+	isBookInCollection func(ctx context.Context, bookId int64) (bool, error)
 }
 
 func (mc *mockCollectionFetcher) GetBookCollection(ctx context.Context, userId int64, bookId int64) *string {
 	return mc.getBookCollection(ctx, userId, bookId)
+}
+
+func (mc *mockCollectionFetcher) IsBookInCollection(ctx context.Context, bookId int64) (bool, error) {
+	return mc.isBookInCollection(ctx, bookId)
 }

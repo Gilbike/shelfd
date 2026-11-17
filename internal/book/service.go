@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/Gilbike/shelfd/internal/core/errs"
 )
 
 const pageSize = 20
@@ -21,6 +23,7 @@ type repository interface {
 }
 
 type bookCollectionFetcher interface {
+	IsBookInCollection(ctx context.Context, bookId int64) (bool, error)
 	GetBookCollection(ctx context.Context, userId int64, bookId int64) *string
 }
 
@@ -190,7 +193,15 @@ func (s *Service) Update(ctx context.Context, id int64, payload updatePayload) e
 }
 
 func (s *Service) Delete(ctx context.Context, id int64) error {
-	err := s.repository.Delete(ctx, id)
+	hasUsers, err := s.collectionFetcher.IsBookInCollection(ctx, id)
+	if err != nil {
+		return err
+	}
+	if hasUsers {
+		return errs.ErrInUse
+	}
+
+	err = s.repository.Delete(ctx, id)
 	if err != nil {
 		return err
 	}
