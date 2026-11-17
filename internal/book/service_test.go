@@ -37,7 +37,7 @@ func TestListTotalPages(t *testing.T) {
 			},
 		}
 
-		service := NewService(&mockRepo)
+		service := NewService(&mockRepo, &mockCollectionFetcher{})
 
 		result, err := service.List(t.Context(), listFilters{})
 
@@ -53,7 +53,7 @@ func TestListTotalPages(t *testing.T) {
 
 func TestUploadCoverFileFormat(t *testing.T) {
 	mockRepo := mockRepository{}
-	service := NewService(&mockRepo)
+	service := NewService(&mockRepo, &mockCollectionFetcher{})
 
 	err := service.UploadCover(t.Context(), 0, "", []byte{}, "")
 
@@ -85,4 +85,13 @@ func (mr *mockRepository) Delete(ctx context.Context, id int64) error {
 }
 func (mr *mockRepository) Update(ctx context.Context, id int64, dirtyFields map[string]any) error {
 	return mr.update(ctx, id, dirtyFields)
+}
+
+// mock collection fetcher
+type mockCollectionFetcher struct {
+	getBookCollection func(ctx context.Context, userId int64, bookId int64) *string
+}
+
+func (mc *mockCollectionFetcher) GetBookCollection(ctx context.Context, userId int64, bookId int64) *string {
+	return mc.getBookCollection(ctx, userId, bookId)
 }
