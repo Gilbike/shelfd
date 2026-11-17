@@ -5,7 +5,7 @@
 	import { api, apiRoute } from '$lib/api';
 	import { isApiError } from '$lib/api/error';
 	import { _ } from '$lib/i18n/index.svelte';
-	import { LibraryBig, LogOut, User } from '@lucide/svelte';
+	import { BookCopy, LibraryBig, LogOut, User } from '@lucide/svelte';
 	import { DropdownMenu, Tooltip } from 'bits-ui';
 	import { fly } from 'svelte/transition';
 	import Button from './Button.svelte';
@@ -31,15 +31,15 @@
 <nav
 	class="flex flex-row justify-between border-r border-r-border bg-surface px-4 py-2 md:flex-col md:py-4"
 >
-	<div class="flex flex-col gap-2">
+	<div class="flex gap-2 md:flex-col">
 		<Tooltip.Provider delayDuration={200} disableHoverableContent={true}>
 			<Tooltip.Root>
 				<Tooltip.Trigger>
 					<a
 						href={resolve('/(app)/books')}
-						class="interactive-secondary block cursor-pointer rounded p-2"
+						class="interactive-secondary mx-auto block w-fit cursor-pointer rounded p-2"
 					>
-						<LibraryBig />
+						<BookCopy />
 					</a>
 					<p class="mt-0.5 text-xs text-foreground/60 md:hidden">{_('books.books')}</p>
 				</Tooltip.Trigger>
@@ -55,6 +55,39 @@
 									<Tooltip.Arrow class="text-secondary" />
 									<p class="p-2">
 										{_('books.books')}
+									</p>
+								</div>
+							</div>
+						{/if}
+					{/snippet}
+				</Tooltip.Content>
+			</Tooltip.Root>
+		</Tooltip.Provider>
+		<Tooltip.Provider delayDuration={200} disableHoverableContent={true}>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<a
+						href={resolve('/(app)/collections')}
+						class="interactive-secondary mx-auto block w-fit cursor-pointer rounded p-2"
+					>
+						<LibraryBig />
+					</a>
+					<p class="mt-0.5 text-xs text-foreground/60 md:hidden">
+						{_('books.collections.collections')}
+					</p>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="right" forceMount>
+					{#snippet child({ wrapperProps, props, open })}
+						{#if open}
+							<div {...wrapperProps}>
+								<div
+									{...props}
+									class="rounded bg-secondary shadow-lg"
+									transition:fly={{ x: -20, opacity: 0, duration: 160 }}
+								>
+									<Tooltip.Arrow class="text-secondary" />
+									<p class="p-2">
+										{_('books.collections.collections')}
 									</p>
 								</div>
 							</div>

@@ -37,6 +37,7 @@
 		"no_cover": "No cover image",
 		"upload_cover": "Click to upload cover",
 		"collections": {
+			"collections": "Collections",
 			"not_added": "Not added",
 			"want_to_read": "Want to read",
 			"currently_reading": "Currently reading",
