@@ -108,3 +108,7 @@ func (mw *Manager) CORS(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func (mw *Manager) HelperSecure(handler func(w http.ResponseWriter, r *http.Request)) http.Handler {
+	return mw.WithSession(mw.RequireAuth(http.HandlerFunc(handler)))
+}

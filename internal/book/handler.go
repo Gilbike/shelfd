@@ -15,7 +15,8 @@ const maxFileSize = 2 << 20 // 2 MB
 
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
-	Get(ctx context.Context, id int64) (*Book, error)
+	ListForUser(ctx context.Context, userId int64) (*listForUserResponse, error)
+	Get(ctx context.Context, userId int64, bookId int64) (*Book, error)
 	Create(ctx context.Context, payload createPayload) (*Book, error)
 	Update(ctx context.Context, id int64, payload updatePayload) error
 	Delete(ctx context.Context, id int64) error
@@ -32,17 +33,14 @@ func NewHandler(service service) *Handler {
 	}
 }
 
-func (h *Handler) RegisterRoutes(middlewares *middleware.Manager) http.Handler {
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("GET /", h.HandleBookList)
-	mux.HandleFunc("POST /", h.HandleBookCreate)
-	mux.HandleFunc("GET /{id}", h.HandleBookGet)
-	mux.HandleFunc("PATCH /{id}", h.HandleBookUpdate)
-	mux.HandleFunc("PUT /{id}/cover", h.HandleBookCoverUpload) // TODO: probably should change to PATCH
-	mux.HandleFunc("DELETE /{id}", h.HandleBookDelete)
-
-	return middlewares.WithSession(middlewares.RequireAuth(mux))
+func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
+	mux.Handle("GET "+pattern+"/", middlewares.HelperSecure(h.HandleBookList))
+	mux.Handle("GET "+pattern+"/me", middlewares.HelperSecure(h.HandleBookListForUser))
+	mux.Handle("POST "+pattern+"/", middlewares.HelperSecure(h.HandleBookCreate))
+	mux.Handle("GET "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookGet))
+	mux.Handle("PATCH "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookUpdate))
+	mux.Handle("PUT "+pattern+"/{id}/cover", middlewares.HelperSecure(h.HandleBookCoverUpload)) // TODO: probably should change to PATCH
+	mux.Handle("DELETE "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookDelete))
 }
 
 func (h *Handler) HandleBookList(w http.ResponseWriter, r *http.Request) {
@@ -67,6 +65,22 @@ func (h *Handler) HandleBookList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (h *Handler) HandleBookListForUser(w http.ResponseWriter, r *http.Request) {
+	userId, ok := middleware.UserIDFromContext(r.Context())
+	if !ok {
+		api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
+		return
+	}
+
+	result, err := h.service.ListForUser(r.Context(), userId)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+
+	api.JSON(w, http.StatusOK, result)
+}
+
 func (h *Handler) HandleBookGet(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
@@ -75,7 +89,13 @@ func (h *Handler) HandleBookGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := h.service.Get(r.Context(), id)
+	userId, ok := middleware.UserIDFromContext(r.Context())
+	if !ok {
+		api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
+		return
+	}
+
+	book, err := h.service.Get(r.Context(), userId, id)
 	if err != nil {
 		api.Error(w, api.NewApiError(err))
 		return

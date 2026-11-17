@@ -8,16 +8,24 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/Gilbike/shelfd/internal/core/errs"
 )
 
 const pageSize = 20
 
 type repository interface {
 	FetchAll(ctx context.Context, p pagination, s sorting) ([]Book, int64, error)
+	FetchForUser(ctx context.Context, userId int64) ([]Book, error)
 	FindById(ctx context.Context, id int64) (*Book, error)
 	Create(ctx context.Context, book *Book) (int64, error)
 	Delete(ctx context.Context, id int64) error
 	Update(ctx context.Context, id int64, dirtyFields map[string]any) error
+}
+
+type bookCollectionFetcher interface {
+	IsBookInCollection(ctx context.Context, bookId int64) (bool, error)
+	GetBookCollection(ctx context.Context, userId int64, bookId int64) *string
 }
 
 type listFilters struct {
@@ -52,12 +60,14 @@ type updatePayload struct {
 }
 
 type Service struct {
-	repository repository
+	repository        repository
+	collectionFetcher bookCollectionFetcher
 }
 
-func NewService(repository repository) *Service {
+func NewService(repository repository, collectionFetcher bookCollectionFetcher) *Service {
 	return &Service{
-		repository: repository,
+		repository:        repository,
+		collectionFetcher: collectionFetcher,
 	}
 }
 
@@ -76,8 +86,28 @@ func (s *Service) List(ctx context.Context, filters listFilters) (*listResult, e
 	}, nil
 }
 
-func (s *Service) Get(ctx context.Context, id int64) (*Book, error) {
-	return s.repository.FindById(ctx, id)
+func (s *Service) ListForUser(ctx context.Context, userId int64) (*listForUserResponse, error) {
+	books, err := s.repository.FetchForUser(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &listForUserResponse{
+		Data:       books,
+		TotalBooks: len(books),
+	}, nil
+}
+
+func (s *Service) Get(ctx context.Context, userId int64, bookId int64) (*Book, error) {
+	book, err := s.repository.FindById(ctx, bookId)
+	if err != nil {
+		return nil, err
+	}
+
+	collection := s.collectionFetcher.GetBookCollection(ctx, userId, bookId)
+	book.Collection = collection
+
+	return book, nil
 }
 
 func (s *Service) Create(ctx context.Context, payload createPayload) (*Book, error) {
@@ -176,7 +206,15 @@ func (s *Service) Update(ctx context.Context, id int64, payload updatePayload) e
 }
 
 func (s *Service) Delete(ctx context.Context, id int64) error {
-	err := s.repository.Delete(ctx, id)
+	hasUsers, err := s.collectionFetcher.IsBookInCollection(ctx, id)
+	if err != nil {
+		return err
+	}
+	if hasUsers {
+		return errs.ErrInUse
+	}
+
+	err = s.repository.Delete(ctx, id)
 	if err != nil {
 		return err
 	}

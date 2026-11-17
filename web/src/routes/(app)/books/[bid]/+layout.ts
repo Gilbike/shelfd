@@ -4,7 +4,9 @@ import type { Book } from '$lib/api/types';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
-export const load: LayoutLoad = async ({ params }) => {
+export const load: LayoutLoad = async ({ params, depends }) => {
+	depends('data:book');
+
 	const book = await api<Book>(apiRoute('books.get', { id: params.bid }));
 
 	if (isApiError(book)) {

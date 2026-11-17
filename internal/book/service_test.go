@@ -37,7 +37,7 @@ func TestListTotalPages(t *testing.T) {
 			},
 		}
 
-		service := NewService(&mockRepo)
+		service := NewService(&mockRepo, &mockCollectionFetcher{})
 
 		result, err := service.List(t.Context(), listFilters{})
 
@@ -53,7 +53,7 @@ func TestListTotalPages(t *testing.T) {
 
 func TestUploadCoverFileFormat(t *testing.T) {
 	mockRepo := mockRepository{}
-	service := NewService(&mockRepo)
+	service := NewService(&mockRepo, &mockCollectionFetcher{})
 
 	err := service.UploadCover(t.Context(), 0, "", []byte{}, "")
 
@@ -64,15 +64,19 @@ func TestUploadCoverFileFormat(t *testing.T) {
 
 // repository mock
 type mockRepository struct {
-	fetchAll func(ctx context.Context, p pagination, s sorting) ([]Book, int64, error)
-	findById func(ctx context.Context, id int64) (*Book, error)
-	create   func(ctx context.Context, book *Book) (int64, error)
-	delete   func(ctx context.Context, id int64) error
-	update   func(ctx context.Context, id int64, dirtyFields map[string]any) error
+	fetchAll     func(ctx context.Context, p pagination, s sorting) ([]Book, int64, error)
+	fetchForUser func(ctx context.Context, userId int64) ([]Book, error)
+	findById     func(ctx context.Context, id int64) (*Book, error)
+	create       func(ctx context.Context, book *Book) (int64, error)
+	delete       func(ctx context.Context, id int64) error
+	update       func(ctx context.Context, id int64, dirtyFields map[string]any) error
 }
 
 func (mr *mockRepository) FetchAll(ctx context.Context, p pagination, s sorting) ([]Book, int64, error) {
 	return mr.fetchAll(ctx, p, s)
+}
+func (mr *mockRepository) FetchForUser(ctx context.Context, userId int64) ([]Book, error) {
+	return mr.fetchForUser(ctx, userId)
 }
 func (mr *mockRepository) FindById(ctx context.Context, id int64) (*Book, error) {
 	return mr.findById(ctx, id)
@@ -85,4 +89,18 @@ func (mr *mockRepository) Delete(ctx context.Context, id int64) error {
 }
 func (mr *mockRepository) Update(ctx context.Context, id int64, dirtyFields map[string]any) error {
 	return mr.update(ctx, id, dirtyFields)
+}
+
+// mock collection fetcher
+type mockCollectionFetcher struct {
+	getBookCollection  func(ctx context.Context, userId int64, bookId int64) *string
+	isBookInCollection func(ctx context.Context, bookId int64) (bool, error)
+}
+
+func (mc *mockCollectionFetcher) GetBookCollection(ctx context.Context, userId int64, bookId int64) *string {
+	return mc.getBookCollection(ctx, userId, bookId)
+}
+
+func (mc *mockCollectionFetcher) IsBookInCollection(ctx context.Context, bookId int64) (bool, error) {
+	return mc.isBookInCollection(ctx, bookId)
 }

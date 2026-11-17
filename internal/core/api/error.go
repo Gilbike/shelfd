@@ -65,6 +65,10 @@ func NewApiError(err error) *ApiError {
 		apiError.Status = http.StatusConflict
 		apiError.Code = "RESOURCE_ALREADY_EXISTS"
 		apiError.Message = "Resource conflicts with already created resource"
+	case errors.Is(err, errs.ErrInUse):
+		apiError.Status = http.StatusConflict
+		apiError.Code = "RESOURCE_IN_USE"
+		apiError.Message = "Resource cannot be deleted because it is currently in use"
 
 	// session errors
 	case errors.Is(err, errs.ErrInvalidCredentials):
