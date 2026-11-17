@@ -29,6 +29,7 @@ export type Book = {
 	cover_url?: string;
 	published_year?: number;
 	description?: string;
+	collection?: string;
 	created_at: string;
 	updated_at: string;
 };

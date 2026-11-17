@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { api, apiRoute } from '$lib/api';
 	import { isApiError } from '$lib/api/error';
@@ -22,9 +22,10 @@
 	import type { LayoutProps } from './$types';
 
 	const { data }: LayoutProps = $props();
-	const { id, title, cover_url, pages, authors, description, isbn, published_year } = $derived(
-		data.book
-	);
+	const { id, title, cover_url, pages, authors, description, isbn, published_year, collection } =
+		$derived(data.book);
+
+	let collectionName: string = $derived(collection !== undefined ? collection : 'not_added');
 
 	async function handleDeleteClick() {
 		const result = await api(apiRoute('books.delete', { id }));
@@ -33,6 +34,17 @@
 			return;
 		}
 		goto(resolve('/(app)/books'));
+	}
+
+	async function handleCollectionClick(collection: string) {
+		const result = await api(apiRoute('books.collection.set', { id }), {
+			body: JSON.stringify({ collection })
+		});
+		if (isApiError(result)) {
+			// TODO: implment feedback
+			return;
+		}
+		await invalidate('data:book');
 	}
 </script>
 
@@ -102,8 +114,7 @@
 			class="items-centerrounded mt-2 flex w-fit flex-row overflow-hidden rounded border border-border"
 		>
 			<p class="flex flex-row items-center gap-2 border-r border-r-border px-2 py-2">
-				<BookDashed size={16} />
-				{_('books.collections.not_added')}
+				{@render collectionBadge(collectionName)}
 			</p>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger class="interactive-secondary cursor-pointer px-2">
@@ -121,27 +132,27 @@
 								>
 									<DropdownMenu.Item
 										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										onSelect={() => handleCollectionClick('want_to_read')}
 									>
-										<BookBookmark size={16} />
-										{_('books.collections.want_to_read')}
+										{@render collectionBadge('want_to_read')}
 									</DropdownMenu.Item>
 									<DropdownMenu.Item
 										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										onSelect={() => handleCollectionClick('currently_reading')}
 									>
-										<BookOpen size={16} />
-										{_('books.collections.currently_reading')}
+										{@render collectionBadge('currently_reading')}
 									</DropdownMenu.Item>
 									<DropdownMenu.Item
 										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										onSelect={() => handleCollectionClick('backlog')}
 									>
-										<BookExclamationPoint size={16} />
-										{_('books.collections.backlog')}
+										{@render collectionBadge('backlog')}
 									</DropdownMenu.Item>
 									<DropdownMenu.Item
 										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										onSelect={() => handleCollectionClick('completed')}
 									>
-										<BookOpenCheck size={16} />
-										{_('books.collections.completed')}
+										{@render collectionBadge('completed')}
 									</DropdownMenu.Item>
 								</div>
 							</div>
@@ -165,3 +176,22 @@
 		{/if}
 	</div>
 </div>
+
+{#snippet collectionBadge(collection: string)}
+	{#if collection == 'want_to_read'}
+		<BookBookmark size={16} />
+		{_('books.collections.want_to_read')}
+	{:else if collection == 'currently_reading'}
+		<BookOpen size={16} />
+		{_('books.collections.currently_reading')}
+	{:else if collection == 'backlog'}
+		<BookExclamationPoint size={16} />
+		{_('books.collections.backlog')}
+	{:else if collection == 'completed'}
+		<BookOpenCheck size={16} />
+		{_('books.collections.completed')}
+	{:else if collection == 'not_added'}
+		<BookDashed size={16} />
+		{_('books.collections.not_added')}
+	{/if}
+{/snippet}
