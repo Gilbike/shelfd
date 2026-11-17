@@ -7,3 +7,8 @@ type listResponse struct {
 	TotalBooks  int64  `json:"total_books"`
 	Data        []Book `json:"data"`
 }
+
+type listForUserResponse struct {
+	TotalBooks int    `json:"total_books"`
+	Data       []Book `json:"data"`
+}

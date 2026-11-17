@@ -15,6 +15,7 @@ const maxFileSize = 2 << 20 // 2 MB
 
 type service interface {
 	List(ctx context.Context, filter listFilters) (*listResult, error)
+	ListForUser(ctx context.Context, userId int64) (*listForUserResponse, error)
 	Get(ctx context.Context, userId int64, bookId int64) (*Book, error)
 	Create(ctx context.Context, payload createPayload) (*Book, error)
 	Update(ctx context.Context, id int64, payload updatePayload) error
@@ -34,6 +35,7 @@ func NewHandler(service service) *Handler {
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
 	mux.Handle("GET "+pattern+"/", middlewares.HelperSecure(h.HandleBookList))
+	mux.Handle("GET "+pattern+"/me", middlewares.HelperSecure(h.HandleBookListForUser))
 	mux.Handle("POST "+pattern+"/", middlewares.HelperSecure(h.HandleBookCreate))
 	mux.Handle("GET "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookGet))
 	mux.Handle("PATCH "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookUpdate))
@@ -61,6 +63,22 @@ func (h *Handler) HandleBookList(w http.ResponseWriter, r *http.Request) {
 		TotalBooks:  result.TotalCount,
 		Data:        result.Books,
 	})
+}
+
+func (h *Handler) HandleBookListForUser(w http.ResponseWriter, r *http.Request) {
+	userId, ok := middleware.UserIDFromContext(r.Context())
+	if !ok {
+		api.Error(w, api.NewApiError(errs.ErrUnauthenticated))
+		return
+	}
+
+	result, err := h.service.ListForUser(r.Context(), userId)
+	if err != nil {
+		api.Error(w, api.NewApiError(err))
+		return
+	}
+
+	api.JSON(w, http.StatusOK, result)
 }
 
 func (h *Handler) HandleBookGet(w http.ResponseWriter, r *http.Request) {

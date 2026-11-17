@@ -119,6 +119,54 @@ func (r *Repository) FetchAll(ctx context.Context, p pagination, s sorting) ([]B
 	return books, totalCount, nil
 }
 
+// TODO: add collection filter
+func (r *Repository) FetchForUser(ctx context.Context, userId int64) ([]Book, error) {
+	const query = `
+		SELECT id, title, authors, pages, isbn, cover_url, published_year, description, collection, books.created_at, books.updated_at
+		FROM books
+		INNER JOIN user_books ON books.id = user_books.book_id
+		WHERE user_books.user_id = ?;
+	`
+
+	rows, err := r.db.QueryContext(ctx, query, userId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get books: %w", err)
+	}
+	defer rows.Close()
+
+	books := []Book{}
+
+	for rows.Next() {
+		var authorsRaw string
+		var book Book
+		err := rows.Scan(
+			&book.ID,
+			&book.Title,
+			&authorsRaw,
+			&book.Pages,
+			&book.ISBN,
+			&book.CoverUrl,
+			&book.PublishedYear,
+			&book.Description,
+			&book.Collection,
+			&book.CreatedAt,
+			&book.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row to book: %w", err)
+		}
+		book.Authors = strings.Split(authorsRaw, authorsSeparator)
+		books = append(books, book)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
+
 func (r *Repository) FindById(ctx context.Context, id int64) (*Book, error) {
 	const query = `
 		SELECT id, title, authors, pages, isbn, cover_url, published_year, description, created_at, updated_at
