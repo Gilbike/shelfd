@@ -20,7 +20,8 @@
 		"save": "Save"
 	},
 	"profile": {
-		"profile": "Profile"
+		"profile": "Profile",
+		"library": "Your library"
 	},
 	"books": {
 		"attributes": {

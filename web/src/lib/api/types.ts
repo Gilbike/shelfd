@@ -47,3 +47,8 @@ export type BookListResponse = {
 	total_books: number;
 	data: Book[];
 };
+
+export type BookListForUserResponse = {
+	total_books: number;
+	data: Book[];
+};
