@@ -131,25 +131,25 @@
 									transition:fly={{ duration: 160, opacity: 0, y: -20 }}
 								>
 									<DropdownMenu.Item
-										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										class="interactive-secondary flex cursor-pointer flex-row items-center gap-1 rounded p-1 px-2"
 										onSelect={() => handleCollectionClick('want_to_read')}
 									>
 										{@render collectionBadge('want_to_read')}
 									</DropdownMenu.Item>
 									<DropdownMenu.Item
-										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										class="interactive-secondary flex cursor-pointer flex-row items-center gap-1 rounded p-1 px-2"
 										onSelect={() => handleCollectionClick('currently_reading')}
 									>
 										{@render collectionBadge('currently_reading')}
 									</DropdownMenu.Item>
 									<DropdownMenu.Item
-										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										class="interactive-secondary flex cursor-pointer flex-row items-center gap-1 rounded p-1 px-2"
 										onSelect={() => handleCollectionClick('backlog')}
 									>
 										{@render collectionBadge('backlog')}
 									</DropdownMenu.Item>
 									<DropdownMenu.Item
-										class="interactive-secondary flex flex-row items-center gap-1 rounded p-1 px-2"
+										class="interactive-secondary flex cursor-pointer flex-row items-center gap-1 rounded p-1 px-2"
 										onSelect={() => handleCollectionClick('completed')}
 									>
 										{@render collectionBadge('completed')}
