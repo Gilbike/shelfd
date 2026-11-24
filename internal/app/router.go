@@ -35,6 +35,10 @@ func newRouter(routeMap RouteMap, middlewares *middleware.Manager, isDevelopment
 		return middlewares.Logging(middlewares.CORS(mux))
 	}
 
+	mux.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
+		http.NotFound(w, r)
+	})
+
 	web.EmbedWeb(mux)
 	return middlewares.Logging(mux)
 }
