@@ -148,7 +148,7 @@ func (r *Repository) FetchForUser(ctx context.Context, userId int64) ([]Book, er
 			&book.CoverUrl,
 			&book.PublishedYear,
 			&book.Description,
-			&book.Collection,
+			&book.Shelf,
 			&book.CreatedAt,
 			&book.UpdatedAt,
 		)

@@ -1,4 +1,4 @@
-package collection
+package shelf
 
 import (
 	"errors"
@@ -11,12 +11,12 @@ func TestCollectionNameValidation(t *testing.T) {
 	mock := UserBook{
 		UserId:         1,
 		BookId:         2,
-		CollectionName: "invalid_name",
+		ShelfName: "invalid_name",
 	}
 
 	err := mock.IsCollectionNameValid()
 
 	if !errors.Is(err, errs.ErrInvalidInput) {
-		t.Errorf(`CollectionName = %+v, expected invalid input error`, mock.CollectionName)
+		t.Errorf(`CollectionName = %+v, expected invalid input error`, mock.ShelfName)
 	}
 }

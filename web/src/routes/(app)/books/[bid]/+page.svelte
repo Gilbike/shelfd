@@ -22,10 +22,10 @@
 	import type { LayoutProps } from './$types';
 
 	const { data }: LayoutProps = $props();
-	const { id, title, cover_url, pages, authors, description, isbn, published_year, collection } =
+	const { id, title, cover_url, pages, authors, description, isbn, published_year, shelf } =
 		$derived(data.book);
 
-	let collectionName: string = $derived(collection !== undefined ? collection : 'not_added');
+	let collectionName: string = $derived(shelf !== undefined ? shelf : 'not_added');
 
 	async function handleDeleteClick() {
 		const result = await api(apiRoute('books.delete', { id }));
@@ -37,7 +37,7 @@
 	}
 
 	async function handleCollectionClick(collection: string) {
-		const result = await api(apiRoute('books.collection.set', { id }), {
+		const result = await api(apiRoute('books.shelf.set', { id }), {
 			body: JSON.stringify({ collection })
 		});
 		if (isApiError(result)) {

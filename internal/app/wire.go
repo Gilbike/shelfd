@@ -4,9 +4,9 @@ import (
 	"github.com/Gilbike/shelfd/internal/asset"
 	"github.com/Gilbike/shelfd/internal/auth"
 	"github.com/Gilbike/shelfd/internal/book"
-	"github.com/Gilbike/shelfd/internal/collection"
 	"github.com/Gilbike/shelfd/internal/core/hash"
 	"github.com/Gilbike/shelfd/internal/middleware"
+	"github.com/Gilbike/shelfd/internal/shelf"
 	"github.com/Gilbike/shelfd/internal/user"
 )
 
@@ -16,28 +16,28 @@ func (app *App) wire() (RouteMap, *middleware.Manager) {
 	userRepo := user.NewRepository(app.db)
 	authRepo := auth.NewRepository(app.db)
 	bookRepo := book.NewRepository(app.db)
-	collectionRepo := collection.NewRepository(app.db)
+	shelfRepo := shelf.NewRepository(app.db)
 
 	userService := user.NewService(userRepo, argon2hasher)
 	authService := auth.NewService(authRepo, userRepo, argon2hasher, app.config.SessionLength)
 
-	collectionService := collection.NewService(collectionRepo)
-	bookService := book.NewService(bookRepo, collectionService)
+	shelfService := shelf.NewService(shelfRepo)
+	bookService := book.NewService(bookRepo, shelfService)
 
 	middlewares := middleware.New(authService)
 
 	userHandler := user.NewHandler(userService, authService)
 	authHandler := auth.NewHandler(authService)
 	bookHandler := book.NewHandler(bookService)
-	collectionHandler := collection.NewHandler(collectionService)
+	shelfHandler := shelf.NewHandler(shelfService)
 
 	assetHandler := asset.NewHandler()
 
 	return RouteMap{
-		"users":      userHandler,
-		"auth":       authHandler,
-		"books":      bookHandler,
-		"books/{id}": collectionHandler,
-		"assets":     assetHandler,
+		"users":            userHandler,
+		"auth":             authHandler,
+		"books":            bookHandler,
+		"books/{id}/shelf": shelfHandler,
+		"assets":           assetHandler,
 	}, middlewares
 }

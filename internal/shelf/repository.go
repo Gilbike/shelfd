@@ -1,4 +1,4 @@
-package collection
+package shelf
 
 import (
 	"context"
@@ -19,7 +19,7 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db}
 }
 
-func (r *Repository) FetchBookCollectionForUser(ctx context.Context, userId int64, bookId int64) (string, error) {
+func (r *Repository) FetchBookShelfForUser(ctx context.Context, userId int64, bookId int64) (string, error) {
 	const query = `
 		SELECT collection
 		FROM user_books
@@ -59,7 +59,7 @@ func (r *Repository) FetchBookUserCount(ctx context.Context, bookId int64) (int6
 	return count, nil
 }
 
-func (r *Repository) UpsertCollection(ctx context.Context, userId int64, bookId int64, collection string) error {
+func (r *Repository) UpsertShelf(ctx context.Context, userId int64, bookId int64, collection string) error {
 	const query = `
 		INSERT INTO user_books (user_id, book_id, collection)
 		VALUES (?, ?, ?)

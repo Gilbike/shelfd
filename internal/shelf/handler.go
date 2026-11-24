@@ -1,4 +1,4 @@
-package collection
+package shelf
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 )
 
 type service interface {
-	SetBookCollection(ctx context.Context, payload *UserBook) error
+	SetBookShelf(ctx context.Context, payload *UserBook) error
 }
 
 type Handler struct {
@@ -26,10 +26,10 @@ func NewHandler(service service) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
-	mux.Handle("PUT "+pattern+"/collection", middlewares.HelperSecure(h.HandleBookCollectionSet))
+	mux.Handle("PUT "+pattern, middlewares.HelperSecure(h.HandleBookShelfSet))
 }
 
-func (h *Handler) HandleBookCollectionSet(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) HandleBookShelfSet(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	bookId, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil || bookId <= 0 {
@@ -52,12 +52,12 @@ func (h *Handler) HandleBookCollectionSet(w http.ResponseWriter, r *http.Request
 	userBook := &UserBook{
 		UserId:         userId,
 		BookId:         bookId,
-		CollectionName: request.Collection,
+		ShelfName: request.Collection,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
 
-	err = h.service.SetBookCollection(r.Context(), userBook)
+	err = h.service.SetBookShelf(r.Context(), userBook)
 	if err != nil {
 		api.Error(w, api.NewApiError(err))
 		return

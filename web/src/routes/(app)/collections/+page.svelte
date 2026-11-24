@@ -36,7 +36,7 @@
 				<div
 					class="grid min-h-0 flex-1 auto-rows-max grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
 				>
-					{#each data.books.filter((x) => x.collection === tab) as book (book.id)}
+					{#each data.books.filter((x) => x.shelf === tab) as book (book.id)}
 						<BookCard {...book} />
 					{/each}
 				</div>

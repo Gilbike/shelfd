@@ -17,7 +17,7 @@ const apiRoutes = {
 	'books.delete': { path: '/v1/books/{id}', method: 'DELETE' },
 	'books.update': { path: '/v1/books/{id}', method: 'PATCH' },
 	'books.cover.update': { path: '/v1/books/{id}/cover', method: 'PUT' },
-	'books.collection.set': { path: '/v1/books/{id}/collection', method: 'PUT' }
+	'books.shelf.set': { path: '/v1/books/{id}/shelf', method: 'PUT' }
 } as const satisfies Record<string, RouteData>;
 
 export type Route = keyof typeof apiRoutes;

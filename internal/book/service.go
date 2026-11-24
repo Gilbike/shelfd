@@ -105,7 +105,7 @@ func (s *Service) Get(ctx context.Context, userId int64, bookId int64) (*Book, e
 	}
 
 	collection := s.collectionFetcher.GetBookCollection(ctx, userId, bookId)
-	book.Collection = collection
+	book.Shelf = collection
 
 	return book, nil
 }
