@@ -27,7 +27,7 @@ func NewHandler(service service, verifier middleware.CookieVerifier) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
-	mux.HandleFunc("POST "+pattern+"/", h.HandleUserCreate)
+	mux.HandleFunc("POST "+pattern, h.HandleUserCreate)
 	mux.Handle("GET "+pattern+"/me", middlewares.HelperSecure(h.HandleUserCurrent))
 }
 

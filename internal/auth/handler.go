@@ -26,7 +26,7 @@ func NewHandler(service service) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
-	mux.Handle("POST "+pattern+"/", middlewares.WithSession(http.HandlerFunc(h.HandleUserAuthenticate)))
+	mux.Handle("POST "+pattern, middlewares.WithSession(http.HandlerFunc(h.HandleUserAuthenticate)))
 	mux.Handle("POST "+pattern+"/logout", middlewares.WithSession(http.HandlerFunc(h.HandleUserLogout)))
 }
 

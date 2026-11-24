@@ -26,7 +26,7 @@ func NewHandler(service service) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
-	mux.Handle("PUT "+pattern+"/", middlewares.HelperSecure(h.HandleBookCollectionSet))
+	mux.Handle("PUT "+pattern+"/collection", middlewares.HelperSecure(h.HandleBookCollectionSet))
 }
 
 func (h *Handler) HandleBookCollectionSet(w http.ResponseWriter, r *http.Request) {

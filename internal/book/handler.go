@@ -34,9 +34,9 @@ func NewHandler(service service) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux, pattern string, middlewares *middleware.Manager) {
-	mux.Handle("GET "+pattern+"/", middlewares.HelperSecure(h.HandleBookList))
+	mux.Handle("GET "+pattern, middlewares.HelperSecure(h.HandleBookList))
 	mux.Handle("GET "+pattern+"/me", middlewares.HelperSecure(h.HandleBookListForUser))
-	mux.Handle("POST "+pattern+"/", middlewares.HelperSecure(h.HandleBookCreate))
+	mux.Handle("POST "+pattern, middlewares.HelperSecure(h.HandleBookCreate))
 	mux.Handle("GET "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookGet))
 	mux.Handle("PATCH "+pattern+"/{id}", middlewares.HelperSecure(h.HandleBookUpdate))
 	mux.Handle("PUT "+pattern+"/{id}/cover", middlewares.HelperSecure(h.HandleBookCoverUpload)) // TODO: probably should change to PATCH
