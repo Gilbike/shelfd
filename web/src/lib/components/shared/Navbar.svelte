@@ -73,7 +73,7 @@
 						<LibraryBig />
 					</a>
 					<p class="mt-0.5 text-xs text-foreground/60 md:hidden">
-						{_('books.collections.collections')}
+						{_('profile.library')}
 					</p>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="right" forceMount>
@@ -87,7 +87,7 @@
 								>
 									<Tooltip.Arrow class="text-secondary" />
 									<p class="p-2">
-										{_('books.collections.collections')}
+										{_('profile.library')}
 									</p>
 								</div>
 							</div>

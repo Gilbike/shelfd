@@ -180,18 +180,18 @@
 {#snippet collectionBadge(collection: string)}
 	{#if collection == 'want_to_read'}
 		<BookBookmark size={16} />
-		{_('books.collections.want_to_read')}
+		{_('books.shelfs.want_to_read')}
 	{:else if collection == 'currently_reading'}
 		<BookOpen size={16} />
-		{_('books.collections.currently_reading')}
+		{_('books.shelfs.currently_reading')}
 	{:else if collection == 'backlog'}
 		<BookExclamationPoint size={16} />
-		{_('books.collections.backlog')}
+		{_('books.shelfs.backlog')}
 	{:else if collection == 'completed'}
 		<BookOpenCheck size={16} />
-		{_('books.collections.completed')}
+		{_('books.shelfs.completed')}
 	{:else if collection == 'not_added'}
 		<BookDashed size={16} />
-		{_('books.collections.not_added')}
+		{_('books.shelfs.not_added')}
 	{/if}
 {/snippet}
