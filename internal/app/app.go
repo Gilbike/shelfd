@@ -75,6 +75,10 @@ func New(cfg config.Config) (*App, error) {
 	}
 	app.server = server
 
+	if cfg.SessionSecure == false {
+		slog.Warn("SHELFD_SESSION_SECURE is set to false. Issued cookies will be insecure (HTTP allowed)")
+	}
+
 	return app, nil
 }
 
