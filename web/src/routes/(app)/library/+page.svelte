@@ -17,15 +17,15 @@
 	const { data }: PageProps = $props();
 </script>
 
-<Title text={_('books.shelfs.collections')} />
+<Title text={_('profile.library')} />
 <div class="flex h-full flex-col p-4">
 	<h1 class="mb-2 text-2xl font-bold">{_('profile.library')} ({data.metadata.totalBooks})</h1>
 	<Tabs.Root value="want_to_read">
-		<Tabs.List class="mb-2 flex w-full flex-row gap-2 not-md:flex-col">
+		<Tabs.List class="relative mb-2 flex w-full max-w-full flex-row gap-2 overflow-x-auto">
 			{#each tabs as tab (tab)}
 				<Tabs.Trigger
 					value={tab}
-					class="flex w-fit flex-row items-center justify-center gap-2 rounded border-b-2 border-b-transparent px-4 py-2 data-[state=active]:bg-secondary"
+					class="flex shrink-0 flex-row items-center gap-2 rounded border-b-2 border-b-transparent px-4 py-2 data-[state=active]:bg-secondary"
 				>
 					{@render collectionBadge(tab)}
 				</Tabs.Trigger>

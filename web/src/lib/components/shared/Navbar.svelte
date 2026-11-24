@@ -67,7 +67,7 @@
 			<Tooltip.Root>
 				<Tooltip.Trigger>
 					<a
-						href={resolve('/(app)/collections')}
+						href={resolve('/(app)/library')}
 						class="interactive-secondary mx-auto block w-fit cursor-pointer rounded p-2"
 					>
 						<LibraryBig />
