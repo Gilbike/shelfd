@@ -25,11 +25,13 @@ type CookieVerifier interface {
 
 type Manager struct {
 	cookieVerfier CookieVerifier
+	cookieSecure  bool
 }
 
-func New(verifier CookieVerifier) *Manager {
+func New(verifier CookieVerifier, cookieSecure bool) *Manager {
 	return &Manager{
 		cookieVerfier: verifier,
+		cookieSecure:  cookieSecure,
 	}
 }
 
@@ -65,7 +67,7 @@ func (mw *Manager) WithSession(next http.Handler) http.Handler {
 				Path:     "/",
 				MaxAge:   -1,
 				HttpOnly: api.SessionCookieHttpOnly,
-				Secure:   api.SessionCookieSecure,
+				Secure:   mw.cookieSecure,
 				SameSite: http.SameSiteLaxMode,
 			})
 		}

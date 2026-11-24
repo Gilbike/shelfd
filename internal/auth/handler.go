@@ -16,12 +16,14 @@ type service interface {
 }
 
 type Handler struct {
-	service service
+	service      service
+	cookieSecure bool
 }
 
-func NewHandler(service service) *Handler {
+func NewHandler(service service, cookieSecure bool) *Handler {
 	return &Handler{
-		service: service,
+		service:      service,
+		cookieSecure: cookieSecure,
 	}
 }
 
@@ -62,7 +64,7 @@ func (h *Handler) HandleUserAuthenticate(w http.ResponseWriter, r *http.Request)
 		MaxAge:   api.SessionCookieMaxAge,
 		Expires:  session.ExpiresAt,
 		HttpOnly: api.SessionCookieHttpOnly,
-		Secure:   api.SessionCookieSecure,
+		Secure:   h.cookieSecure,
 		SameSite: http.SameSiteLaxMode,
 	}
 
