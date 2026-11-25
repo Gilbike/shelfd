@@ -16,12 +16,14 @@ type service interface {
 }
 
 type Handler struct {
-	service service
+	service      service
+	cookieSecure bool
 }
 
-func NewHandler(service service) *Handler {
+func NewHandler(service service, cookieSecure bool) *Handler {
 	return &Handler{
-		service: service,
+		service:      service,
+		cookieSecure: cookieSecure,
 	}
 }
 
@@ -55,6 +57,7 @@ func (h *Handler) HandleUserAuthenticate(w http.ResponseWriter, r *http.Request)
 		_ = h.service.RevokeSession(r.Context(), cookie.Value)
 	}
 
+	//nolint:gosec // disable G124 // Safety: Secure option can be changed with a config variable that is safe by default. The option is for people that doesnt have access to https
 	cookie := &http.Cookie{
 		Name:     api.SessionCookieName,
 		Value:    session.ID,
@@ -62,7 +65,7 @@ func (h *Handler) HandleUserAuthenticate(w http.ResponseWriter, r *http.Request)
 		MaxAge:   api.SessionCookieMaxAge,
 		Expires:  session.ExpiresAt,
 		HttpOnly: api.SessionCookieHttpOnly,
-		Secure:   api.SessionCookieSecure,
+		Secure:   h.cookieSecure,
 		SameSite: http.SameSiteLaxMode,
 	}
 

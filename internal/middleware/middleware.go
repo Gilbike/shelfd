@@ -25,11 +25,13 @@ type CookieVerifier interface {
 
 type Manager struct {
 	cookieVerfier CookieVerifier
+	cookieSecure  bool
 }
 
-func New(verifier CookieVerifier) *Manager {
+func New(verifier CookieVerifier, cookieSecure bool) *Manager {
 	return &Manager{
 		cookieVerfier: verifier,
+		cookieSecure:  cookieSecure,
 	}
 }
 
@@ -59,13 +61,14 @@ func (mw *Manager) WithSession(next http.Handler) http.Handler {
 				return
 			}
 
+			//nolint:gosec // disable G124 // Safety: Secure option can be changed with a config variable that is safe by default. The option is for people that doesnt have access to https
 			http.SetCookie(w, &http.Cookie{
 				Name:     api.SessionCookieName,
 				Value:    "",
 				Path:     "/",
 				MaxAge:   -1,
 				HttpOnly: api.SessionCookieHttpOnly,
-				Secure:   api.SessionCookieSecure,
+				Secure:   mw.cookieSecure,
 				SameSite: http.SameSiteLaxMode,
 			})
 		}

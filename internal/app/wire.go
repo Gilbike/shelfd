@@ -24,10 +24,10 @@ func (app *App) wire() (RouteMap, *middleware.Manager) {
 	shelfService := shelf.NewService(shelfRepo)
 	bookService := book.NewService(bookRepo, shelfService)
 
-	middlewares := middleware.New(authService)
+	middlewares := middleware.New(authService, app.config.SessionSecure)
 
 	userHandler := user.NewHandler(userService, authService)
-	authHandler := auth.NewHandler(authService)
+	authHandler := auth.NewHandler(authService, app.config.SessionSecure)
 	bookHandler := book.NewHandler(bookService)
 	shelfHandler := shelf.NewHandler(shelfService)
 

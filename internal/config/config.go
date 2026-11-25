@@ -15,6 +15,7 @@ const (
 	EnvArgonSaltSize = "SHELFD_ARGON_SALT_SIZE"
 	EnvArgonKeyLen   = "SHELFD_ARGON_KEY_LEN"
 	EnvSessionLength = "SHELFD_SESSION_LENGTH"
+	EnvSessionSecure = "SHELFD_SESSION_SECURE"
 )
 
 type Config struct {
@@ -23,6 +24,7 @@ type Config struct {
 	LogFormat     string
 	Argon         ArgonConfig
 	SessionLength int
+	SessionSecure bool
 }
 
 func Load() Config {
@@ -53,11 +55,24 @@ func Load() Config {
 		sessionLength = 43200
 	}
 
+	sessionSecureStr := os.Getenv(EnvSessionSecure)
+
+	var sessionSecure bool
+	switch sessionSecureStr {
+	case "true":
+		sessionSecure = true
+	case "false":
+		sessionSecure = false
+	default:
+		sessionSecure = true
+	}
+
 	return Config{
 		Port:          port,
 		Env:           env,
 		LogFormat:     logFormat,
 		Argon:         argonConfig,
 		SessionLength: int(sessionLength),
+		SessionSecure: sessionSecure,
 	}
 }
