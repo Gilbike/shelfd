@@ -57,6 +57,7 @@ func (h *Handler) HandleUserAuthenticate(w http.ResponseWriter, r *http.Request)
 		_ = h.service.RevokeSession(r.Context(), cookie.Value)
 	}
 
+	//nolint:gosec // disable G124 // Safety: Secure option can be changed with a config variable that is safe by default. The option is for people that doesnt have access to https
 	cookie := &http.Cookie{
 		Name:     api.SessionCookieName,
 		Value:    session.ID,

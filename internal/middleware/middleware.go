@@ -61,6 +61,7 @@ func (mw *Manager) WithSession(next http.Handler) http.Handler {
 				return
 			}
 
+			//nolint:gosec // disable G124 // Safety: Secure option can be changed with a config variable that is safe by default. The option is for people that doesnt have access to https
 			http.SetCookie(w, &http.Cookie{
 				Name:     api.SessionCookieName,
 				Value:    "",
